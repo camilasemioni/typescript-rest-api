@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import CustomerModel from '../models/customer.model';
-import { BAD_REQUEST, NO_CONTENT } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 
-export const deleteCustomerById = async (
+export const deleteCustomer = async (
     req: Request,
     res: Response,
 ) => {
@@ -12,13 +12,13 @@ export const deleteCustomerById = async (
 
         if (!mongoose.Types.ObjectId.isValid(customerId)) {
             return res
-                .status(BAD_REQUEST)
+                .status(StatusCodes.BAD_REQUEST)
                 .json({ error: 'invalid client ID' });
         }
 
         await CustomerModel.findByIdAndDelete(customerId);
 
-        res.status(NO_CONTENT).json({ message: 'success' });
+        res.status(StatusCodes.NO_CONTENT).json({ message: 'success' });
     } catch (error) {
         console.log(error);
     }
