@@ -45,6 +45,40 @@
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Creates a client",
+                "tags": [
+                    "Client"
+                ],
+                "requestBody": {
+                    "description": "Client data to be created",
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Client"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated Client Successfully",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Input"
+                    },
+                    "404": {
+                        "description": "Client Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
         "/client/{clientId}": {
@@ -73,51 +107,6 @@
                     },
                     "400": {
                         "description": "Client Id invalid"
-                    },
-                    "404": {
-                        "description": "Client Not Found"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            },
-            "post": {
-                "summary": "Creates a client",
-                "tags": [
-                    "Client"
-                ],
-                "parameters": [
-                    {
-                        "name": "clientId",
-                        "in": "path",
-                        "required": true,
-                        "description": "Client object id",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Client data to be created",
-                    "required": false,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Client"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Updated Client Successfully",
-                        "content": {
-                            "application/json": {}
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid Input"
                     },
                     "404": {
                         "description": "Client Not Found"
