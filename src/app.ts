@@ -2,7 +2,7 @@ import express from 'express';
 import 'express-async-errors';
 import 'dotenv/config';
 import connectDB from './database/connect.database';
-import clientRouter from "./routes/customer.routes"
+import clientRouter from "./routes/customer.route"
 
 const app = express();
 
