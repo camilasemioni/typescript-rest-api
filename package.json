@@ -43,9 +43,6 @@
     "jest": {
         "preset": "ts-jest",
         "testEnvironment": "node",
-        "modulePathIgnorePatterns": [
-            "<rootDir>/src/tests/errors"
-        ],
         "testMatch": [
             "**/*.test.ts"
         ]
