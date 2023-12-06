@@ -2,90 +2,78 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import customerModel from '../models/customer.model';
 import Queries from '../interfaces/queries.interface';
-import NotFoundError from '../errors/not-found.error';
+import {
+    fieldNames,
+    caseInsensitiveFieldNames,
+} from '../utils/query-fields.util';
+import CustomAPIError from '../errors/custom-error-class.error';
+import BadRequestError from '../errors/bad-request.error';
 
 export const getAllCustomers = async (_: Request, res: Response) => {
-    const { sort, fields } = _.query;
+    try {
+        const { sort, fields } = _.query;
 
-    const fieldNames = [
-        'name',
-        'cpf',
-        'birthday',
-        'email',
-        'cep',
-        'uf',
-        'city',
-        'address',
-        'number',
-        'complement',
-        'neighborhood',
-    ];
-    const caseInsensitiveFieldNames = [
-        'name',
-        'email',
-        'city',
-        'address',
-        'complement',
-        'neighborhood',
-    ];
+        let fieldsList;
+        if (fields) {
+            fieldsList = (fields as string).split(',').join(' ');
 
-    const queryObject: Queries = {};
-
-    fieldNames.forEach((field) => {
-        if (_.query[field]) {
-            queryObject[field] = {
-                $regex: _.query[field] as string,
-            };
-            if (caseInsensitiveFieldNames.includes(field)) {
-                queryObject[field].$options = 'i';
+            if (fieldsList.includes('password')) {
+                throw new BadRequestError('Password access denied');
             }
         }
-    });
 
-    const count = await customerModel.countDocuments();
-    if (count === 0) {
-        return res.status(StatusCodes.NOT_FOUND).json({});
-    }
+        const queryObject: Queries = {};
 
-    let result = customerModel.find(queryObject);
-    if (!result) {
-        throw new NotFoundError('Could not find any matching result');
-    }
+        fieldNames.forEach((field) => {
+            if (_.query[field]) {
+                queryObject[field] = {
+                    $regex: _.query[field] as string,
+                };
+                if (caseInsensitiveFieldNames.includes(field)) {
+                    queryObject[field].$options = 'i';
+                }
+            }
+        });
 
-    if (sort) {
-        const sortList = (sort as string).split(',').join(' ');
-        result = result.sort(sortList);
-    } else {
-        result = result.sort('name');
-    }
-
-    if (fields) {
-        const fieldsList = (fields as string).split(',').join(' ');
-
-        if (fieldsList.includes('password')) {
-            return res.status(StatusCodes.BAD_REQUEST).json({});
+        const count = await customerModel.countDocuments();
+        if (count === 0) {
+            return res.status(StatusCodes.OK).json({});
         }
 
-        result = result.select(fieldsList);
+        let result = customerModel.find(queryObject);
+
+        if (sort) {
+            const sortList = (sort as string).split(',').join(' ');
+            result = result.sort(sortList);
+        } else {
+            result = result.sort('name');
+        }
+
+        if (fieldsList) {
+            result = result.select(fieldsList);
+        }
+
+        const page = +_.query.page! || 1;
+        const limit = +_.query.limit! || 5;
+        const skip = (page - 1) * limit;
+
+        result = result.skip(skip).limit(limit);
+
+        const customerList = await result;
+
+        res.status(StatusCodes.OK).json({
+            nbHits: customerList.length,
+            customerList,
+        });
+    } catch (error) {
+        if (error instanceof CustomAPIError) {
+            res.status(error.statusCode).json({
+                message: error.message,
+            });
+        } else {
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: 'Unknown error',
+            });
+        }
     }
-
-    const page = +_.query.page! || 1;
-    const limit = +_.query.limit! || 5;
-    const skip = (page - 1) * limit;
-
-    result = result.skip(skip).limit(limit);
-
-    const customerList = await result;
-
-    res.status(StatusCodes.OK).json({
-        nbHits: customerList.length,
-        customerList,
-    });
-};
-
-export const getSingleCustomer = async (
-    _: Request,
-    res: Response,
-) => {
-    res.send('Get single customer');
 };
