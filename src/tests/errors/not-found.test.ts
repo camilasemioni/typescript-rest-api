@@ -1,4 +1,3 @@
-import { expect, test } from 'vitest';
 import NotFoundError from '../../errors/not-found.error';
 import { StatusCodes } from 'http-status-codes';
 
