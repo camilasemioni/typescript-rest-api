@@ -40,7 +40,7 @@ export const createClient = async (req: Request, res: Response) => {
 
         const newCustomer = await Customer.create(customer);
 
-        res.status(200).json({ data: newCustomer });
+        res.status(StatusCodes.OK).json(newCustomer);
     } catch (error) {
         if (error instanceof CustomAPIError) {
             res.status(error.statusCode).json({
