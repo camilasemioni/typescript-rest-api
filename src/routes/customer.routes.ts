@@ -1,12 +1,11 @@
-
 import express from 'express';
-import { updateCustomerById } from '../controllers/customer.controller';
+import { updateCustomer } from '../controllers/customer.controller';
 
 const router = express.Router();
 
-router.put('/client/:id', updateCustomerById);
-router.patch('/client/:id', updateCustomerById);
+router
+    .route('/client/:id')
+    .put(updateCustomer)
+    .patch(updateCustomer);
 
 export default router;
-
-
