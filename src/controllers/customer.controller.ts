@@ -41,11 +41,12 @@ export const getAllCustomers = async (_: Request, res: Response) => {
         }
     });
 
-    let result = customerModel.find(queryObject);
-    const count = await result.countDocuments();
+    const count = await customerModel.countDocuments();
     if (count === 0) {
         return res.status(StatusCodes.NOT_FOUND).json({});
     }
+
+    let result = customerModel.find(queryObject);
 
     if (sort) {
         const sortList = (sort as string).split(',').join(' ');
