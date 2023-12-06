@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import customerModel from '../models/customer.model';
 import Queries from '../interfaces/queries.interface';
+import NotFoundError from '../errors/not-found.error';
 
 export const getAllCustomers = async (_: Request, res: Response) => {
     const { sort, fields } = _.query;
@@ -47,6 +48,9 @@ export const getAllCustomers = async (_: Request, res: Response) => {
     }
 
     let result = customerModel.find(queryObject);
+    if (!result) {
+        throw new NotFoundError('Could not find any matching result');
+    }
 
     if (sort) {
         const sortList = (sort as string).split(',').join(' ');
