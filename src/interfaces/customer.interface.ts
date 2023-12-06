@@ -1,9 +1,10 @@
-import { Document } from "mongoose";
+import { Document } from 'mongoose';
 
 export default interface ICustomer extends Document {
     name: string;
     cpf: string;
     email: string;
+    password: string;
     cep: string;
     uf: string;
     city: string;
