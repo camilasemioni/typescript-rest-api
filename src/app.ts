@@ -2,14 +2,17 @@ import express from 'express';
 import 'express-async-errors';
 import 'dotenv/config';
 import connectDB from './database/connect.database';
-import router from './routes/customer.route';
+import customerRouter from './routes/customer.route';
+import swaggerUi from 'swagger-ui-express';
+import swaggerConfig from './swagger.json';
 
 const app = express();
 
-const port = process.env.PORT || 3000;
-
 app.use(express.json());
-app.use('/api/v1/client', router);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig));
+app.use('/api/v1', customerRouter);
+
+const port = process.env.PORT || 3000;
 
 const start = async () => {
     try {
