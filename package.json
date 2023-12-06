@@ -9,9 +9,7 @@
         "build": "tsc",
         "dev": "eslint src --fix && tsc-watch --onSuccess \"node ./dist/app.js\"",
         "lint": "eslint src --fix",
-        "test": "jest",
-        "test-verbose": "vitest --run --reporter verbose",
-        "test-watch": "vitest --watch"
+        "test": "jest"
     },
     "devDependencies": {
         "@types/body-parser": "^1.19.5",
