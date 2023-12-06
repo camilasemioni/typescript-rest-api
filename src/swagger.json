@@ -82,6 +82,51 @@
                     }
                 }
             },
+            "post": {
+                "summary": "Creates a client",
+                "tags": [
+                    "Client"
+                ],
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Client object id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Client data to be created",
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Client"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated Client Successfully",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Input"
+                    },
+                    "404": {
+                        "description": "Client Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "put": {
                 "summary": "Updates a client",
                 "tags": [
@@ -102,7 +147,11 @@
                     "description": "Client data to be updated",
                     "required": false,
                     "content": {
-                        "application/json": {}
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateClient"
+                            }
+                        }
                     }
                 },
                 "responses": {
@@ -154,6 +203,53 @@
                     },
                     "500": {
                         "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Client": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Jhonny Rowen"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "522.270.870-56"
+                    },
+                    "birthday": {
+                        "type": "string",
+                        "example": "25/12/1975"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "jhonny.rowen@email.com"
+                    },
+                    "cep": {
+                        "type": "string",
+                        "example": "29157-441"
+                    },
+                    "number": {
+                        "type": "string",
+                        "example": "42"
+                    }
+                }
+            },
+            "UpdateClient": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Jorge Ramos"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "655.196.200-91"
                     }
                 }
             }
