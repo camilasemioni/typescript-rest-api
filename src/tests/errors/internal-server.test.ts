@@ -1,4 +1,3 @@
-import { expect, test } from 'vitest';
 import InternalServerError from '../../errors/internal-server.error';
 import { StatusCodes } from 'http-status-codes';
 
