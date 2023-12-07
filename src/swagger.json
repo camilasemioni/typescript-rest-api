@@ -72,9 +72,6 @@
                     "400": {
                         "description": "Invalid Input"
                     },
-                    "404": {
-                        "description": "Client Not Found"
-                    },
                     "500": {
                         "description": "Internal Server Error"
                     }
@@ -210,7 +207,7 @@
                         "type": "string",
                         "example": "522.270.870-56"
                     },
-                    "birthday": {
+                    "date_of_birth": {
                         "type": "string",
                         "example": "25/12/1975"
                     },
@@ -222,7 +219,7 @@
                     "password": {
                         "type": "string",
                         "format": "email",
-                        "example": "password123"
+                        "example": "Password123"
                     },
                     "cep": {
                         "type": "string",
