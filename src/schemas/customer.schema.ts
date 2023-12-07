@@ -61,46 +61,22 @@ const CustomerSchema = new Schema<ICustomer>({
     uf: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) => /^[A-Z]{2}$/.test(value),
-            message: `The UF provided is not valid. Please provide a valid number.`,
-        },
     },
     city: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{2,50}$/.test(value),
-            message: `The city provided is not valid. Please provide a valid city.`,
-        },
     },
     address: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{3,70}$/.test(value),
-            message: `The address provided is not valid. Please provide a valid address.`,
-        },
     },
     complement: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{3,70}$/.test(value),
-            message: `The complement provided is not valid. Please provide a valid complement.`,
-        },
     },
     neighborhood: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{2,70}$/.test(value),
-            message: `The neighborhood provided is not valid. Please provide a valid neighborhood.`,
-        },
     },
 });
 
