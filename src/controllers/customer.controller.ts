@@ -22,6 +22,7 @@ export const createClient = async (req: Request, res: Response) => {
         const viaCepResponse = (await axios.get(addressUrl)).data;
         const { logradouro, complemento, bairro, localidade, uf } =
             viaCepResponse;
+            
         const { password } = client;
         const saltRounds = 10;
         const hashedPassword = await hash(password, saltRounds);
