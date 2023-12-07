@@ -4,6 +4,7 @@ import axios from 'axios';
 import BadRequestError from '../errors/bad-request.error';
 import CustomAPIError from '../errors/custom-error-class.error';
 import { StatusCodes } from 'http-status-codes';
+import { hash } from 'bcrypt';
 
 function formatViaCep(address: string) {
     if (address.length !== 8) {
@@ -14,12 +15,16 @@ function formatViaCep(address: string) {
 export const createClient = async (req: Request, res: Response) => {
     try {
         const client = req.body;
-        const cep = req.body.cep.replace(/[^0-9]/, '');
+
+        const cep = client.cep.replace(/[^0-9]/, '');
         formatViaCep(cep);
         const addressUrl = `https://viacep.com.br/ws/${cep}/json`;
         const viaCepResponse = (await axios.get(addressUrl)).data;
         const { logradouro, complemento, bairro, localidade, uf } =
             viaCepResponse;
+        const { password } = client;
+        const saltRounds = 10;
+        const hashedPassword = await hash(password, saltRounds);
 
         if (
             JSON.stringify(viaCepResponse) ===
@@ -35,6 +40,8 @@ export const createClient = async (req: Request, res: Response) => {
             complement: complemento || 'Not informed',
             neighborhood: bairro || 'Not informed',
         };
+
+        client.password = hashedPassword
 
         const customer = { ...client, ...address };
 
