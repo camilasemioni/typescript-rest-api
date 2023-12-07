@@ -219,9 +219,14 @@
                         "format": "email",
                         "example": "jhonny.rowen@email.com"
                     },
+                    "password": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "password123"
+                    },
                     "cep": {
                         "type": "string",
-                        "example": "29157-441"
+                        "example": "01001-000"
                     },
                     "number": {
                         "type": "string",
