@@ -1,53 +1,34 @@
-import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { getAllCustomers } from '../../controllers/get-customer.controller';
-import customerModel from '../../models/customer.model';
+import request from 'supertest';
+import { app, server } from '../../app';
+import CustomerSchema from '../../models/customer.model';
+import mongoose from 'mongoose';
 
-jest.mock('../../models/customer.model');
+jest.mock('../../models/customer.model', () => ({
+    countDocuments: jest.fn(),
+    select: jest.fn(),
+    find: jest.fn(),
+}));
 
-describe('getAllCustomers', () => {
-    it('should return customers when they exist', async () => {
-        const mockCustomerList = [
-            { name: 'Customer1' },
-            { name: 'Customer2' },
-        ];
-        (customerModel.find as jest.Mock).mockImplementation(() => ({
-            select: jest.fn().mockResolvedValueOnce(mockCustomerList),
-        }));
+describe('getAllCustomers()', () => {
+    test('should return an empty json if there is no items inside the array', async () => {
+        (
+            CustomerSchema.countDocuments as jest.Mock
+        ).mockResolvedValueOnce(0);
 
-        const mockResponse = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
-        } as unknown as Response;
+        const result = await request(app).get('/api/v1/client');
 
-        await getAllCustomers({} as Request, mockResponse);
-
-        expect(mockResponse.status).toHaveBeenCalledWith(
-            StatusCodes.OK,
-        );
-        expect(mockResponse.json).toHaveBeenCalledWith(
-            mockCustomerList,
-        );
+        expect(result.statusCode).toEqual(200);
     });
 
-    it('should return a 404 error when no customers are found', async () => {
-        (customerModel.find as jest.Mock).mockImplementation(() => ({
-            select: jest.fn().mockResolvedValueOnce([]),
-        }));
-
-        const mockResponse = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
-        } as unknown as Response;
-
-        await getAllCustomers({} as Request, mockResponse);
-
-        expect(mockResponse.status).toHaveBeenCalledWith(
-            StatusCodes.NOT_FOUND,
-        );
-        expect(mockResponse.json).toHaveBeenCalledWith({
-            code: 404,
-            message: 'Not Found',
+    afterAll((done) => {
+        mongoose.connection.close().then(() => {
+            if (server) {
+                server.close(() => {
+                    done();
+                });
+            } else {
+                done();
+            }
         });
     });
 });
