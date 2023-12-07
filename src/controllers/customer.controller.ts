@@ -1,15 +1,17 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import customerModel from '../models/customer.model';
-import Queries from '../interfaces/queries.interface';
+import CustomerModel from '../models/customer.model';
+import IQueries from '../interfaces/queries.interface';
 import {
     fieldNames,
     caseInsensitiveFieldNames,
 } from '../utils/query-fields.util';
-import Customer from '../models/customer.model';
 import axios from 'axios';
-import CustomAPIError from '../errors/custom-error-class.error';
 import BadRequestError from '../errors/bad-request.error';
+import { removePassword } from '../utils/customer.util';
+import { formatViaCep } from '../utils/viacep.util';
+import { createCustomerSchemaValidation } from '../middlewares/validation.middleware';
+import errorHandler from '../utils/error-handler.util';
 
 export const getAllCustomers = async (_: Request, res: Response) => {
     try {
@@ -24,7 +26,7 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             }
         }
 
-        const queryObject: Queries = {};
+        const queryObject: IQueries = {};
 
         fieldNames.forEach((field) => {
             if (_.query[field]) {
@@ -37,12 +39,12 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             }
         });
 
-        const count = await customerModel.countDocuments();
+        const count = await CustomerModel.countDocuments();
         if (count === 0) {
             return res.status(StatusCodes.OK).json({});
         }
 
-        let result = customerModel.find(queryObject);
+        let result = CustomerModel.find(queryObject);
 
         if (sort) {
             const sortList = (sort as string).split(',').join(' ');
@@ -68,34 +70,26 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             customerList,
         });
     } catch (error) {
-        if (error instanceof CustomAPIError) {
-            res.status(error.statusCode).json({
-                message: error.message,
-            });
-        } else {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                message: 'Unknown error',
-            });
-            console.log(error);
-        }
+        errorHandler(error, res);
     }
 };
 
-function formatViaCep(address: string) {
-    if (address.length !== 8) {
-        throw new BadRequestError('Invalid CEP format');
-    }
-}
-
 export const createClient = async (req: Request, res: Response) => {
     try {
-        const client = req.body;
-        const cep = req.body.cep.replace(/[^0-9]/, '');
-        formatViaCep(cep);
-        const addressUrl = `https://viacep.com.br/ws/${cep}/json`;
+        const payload = req.body;
+        const cepPayload = payload.cep.replace(/[^0-9]/g, '');
+        formatViaCep(cepPayload);
+        const addressUrl = `https://viacep.com.br/ws/${cepPayload}/json`;
         const viaCepResponse = (await axios.get(addressUrl)).data;
-        const { logradouro, complemento, bairro, localidade, uf } =
-            viaCepResponse;
+
+        const {
+            cep,
+            logradouro,
+            complemento,
+            bairro,
+            localidade,
+            uf,
+        } = viaCepResponse;
 
         if (
             JSON.stringify(viaCepResponse) ===
@@ -103,6 +97,9 @@ export const createClient = async (req: Request, res: Response) => {
         ) {
             throw new BadRequestError('CEP does not exist');
         }
+
+        payload.cep = cep;
+        await createCustomerSchemaValidation.validateAsync(payload);
 
         const address = {
             uf: uf,
@@ -112,21 +109,13 @@ export const createClient = async (req: Request, res: Response) => {
             neighborhood: bairro || 'Not informed',
         };
 
-        const customer = { ...client, ...address };
+        const customer = { ...payload, ...address };
 
-        const newCustomer = await Customer.create(customer);
+        const newCustomer = await CustomerModel.create(customer);
 
-        res.status(StatusCodes.OK).json(newCustomer);
+        const noPasswordCustomer = removePassword(newCustomer);
+        res.status(StatusCodes.OK).json(noPasswordCustomer);
     } catch (error) {
-        if (error instanceof CustomAPIError) {
-            res.status(error.statusCode).json({
-                message: error.message,
-            });
-        } else {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                message: 'Unknown error',
-            });
-            console.log(error);
-        }
+        errorHandler(error, res);
     }
 };
