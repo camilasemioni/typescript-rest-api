@@ -8,7 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import errorHandler from '../utils/error-handler.util';
 import { Request, Response } from 'express';
 
-export const createClient = async (req: Request, res: Response) => {
+export const createCustomer = async (req: Request, res: Response) => {
     try {
         const payload = req.body;
         const cepPayload = payload.cep.replace(/[^0-9]/g, '');
