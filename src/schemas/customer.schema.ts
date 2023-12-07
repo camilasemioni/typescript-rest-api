@@ -54,7 +54,7 @@ const CustomerSchema = new Schema<ICustomer>({
         required: true,
         validate: {
             validator: (value: string) =>
-                /^[0-9]{1,6}$/.test(value),
+                /^[0-9]{1,6}[A-Za-z]{0,3}$/.test(value),
             message: `The number provided is not valid. Please provide a valid number.`,
         },
     },
