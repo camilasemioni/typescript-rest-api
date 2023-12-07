@@ -1,3 +1,4 @@
+import { deleteCustomer } from '../controllers/delete-customer.controller';
 import {
     getAllCustomers,
     getSingleCustomer,
@@ -11,7 +12,7 @@ const router = Router();
 router.route('/client').get(getAllCustomers).post(createCustomer);
 router
     .route('/client/:id')
-    .get(getSingleCustomer)
+    .get(getSingleCustomer).delete(deleteCustomer)
     .put(updateCustomer);
 
 export default router;

@@ -22,7 +22,7 @@ const CustomerSchema = new Schema<ICustomer>({
             message: `The CPF provided is not valid. Please provide a valid CPF.`,
         },
     },
-    date_of_birth: {
+    birthday: {
         type: String,
         required: true,
         validate: {
@@ -34,23 +34,12 @@ const CustomerSchema = new Schema<ICustomer>({
     password: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]*$/.test(
-                    value,
-                ),
-            message: `The password provided is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit.`,
-        },
         select: false,
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        validate: {
-            validator: (value: string) => /\S+@\S+\.\S+/.test(value),
-            message: `The email provided is not valid. Please provide a valid email address.`,
-        },
     },
     cep: {
         type: String,

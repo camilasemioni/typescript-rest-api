@@ -7,6 +7,7 @@ import BadRequestError from '../errors/bad-request.error';
 import { StatusCodes } from 'http-status-codes';
 import errorHandler from '../utils/error-handler.util';
 import { Request, Response } from 'express';
+import { hash } from 'bcrypt';
 
 export const createCustomer = async (req: Request, res: Response) => {
     try {
@@ -25,6 +26,10 @@ export const createCustomer = async (req: Request, res: Response) => {
             uf,
         } = viaCepResponse;
 
+        const { password } = payload;
+        const saltRounds = 10;
+        const hashedPassword = await hash(password, saltRounds);
+
         if (
             JSON.stringify(viaCepResponse) ===
             JSON.stringify({ erro: true })
@@ -42,6 +47,8 @@ export const createCustomer = async (req: Request, res: Response) => {
             complement: complemento || 'Not informed',
             neighborhood: bairro || 'Not informed',
         };
+
+        payload.password = hashedPassword;
 
         const customer = { ...payload, ...address };
 
