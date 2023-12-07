@@ -28,7 +28,7 @@ export const createCustomerSchemaValidation = Joi.object({
         })
         .required(),
 
-    date_of_birth: DateJoi.date().format(['DD/MM/YYYY']).required(),
+    birthday: DateJoi.date().format(['DD/MM/YYYY']).required(),
 
     email: Joi.string().trim().email().required(),
 
@@ -71,7 +71,7 @@ export const updateCustomerSchemaValitation = Joi.object({
             'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit.`,
         }),
 
-    date_of_birth: DateJoi.date().format(['DD/MM/YYYY']),
+    birthday: DateJoi.date().format(['DD/MM/YYYY']),
 
     email: Joi.string().trim().email(),
 

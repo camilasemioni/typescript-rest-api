@@ -22,7 +22,7 @@ const CustomerSchema = new Schema<ICustomer>({
             message: `The CPF provided is not valid. Please provide a valid CPF.`,
         },
     },
-    date_of_birth: {
+    birthday: {
         type: String,
         required: true,
         validate: {
