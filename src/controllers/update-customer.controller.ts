@@ -1,18 +1,16 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import customerModel from '../models/customer.model';
 import { StatusCodes } from 'http-status-codes';
+import NotFoundError from '../errors/not-found.error';
+import errorHandler from '../utils/error-handler.util';
+import { updateCustomerSchemaValitation } from '../middlewares/validation.middleware';
 
 export const updateCustomer = async (req: Request, res: Response) => {
     try {
         const customerId = req.params.id;
+        const payload = req.body;
 
-        if (!mongoose.Types.ObjectId.isValid(customerId)) {
-            res.status(StatusCodes.BAD_REQUEST).json({
-                error: 'Invalid client ID',
-            });
-            return;
-        }
+        await updateCustomerSchemaValitation.validateAsync(payload);
 
         const {
             name,
@@ -23,17 +21,14 @@ export const updateCustomer = async (req: Request, res: Response) => {
             number,
             complement,
             neighborhood,
-        } = req.body;
+        } = payload;
 
         const existingCustomer =
             await customerModel.findById(customerId);
         console.log(existingCustomer);
 
         if (!existingCustomer) {
-            res.status(StatusCodes.NOT_FOUND).json({
-                error: 'Customer not found',
-            });
-            return;
+            throw new NotFoundError('Customer not found');
         }
 
         existingCustomer.name = name || existingCustomer.name;
@@ -54,9 +49,6 @@ export const updateCustomer = async (req: Request, res: Response) => {
             message: 'Customer updated successfully',
         });
     } catch (error) {
-        console.error(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: 'Internal Server Error',
-        });
+        errorHandler(error, res);
     }
 };
