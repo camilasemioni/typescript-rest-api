@@ -4,7 +4,7 @@ export default interface ICustomer extends Document {
     name: string;
     cpf: string;
     password: string;
-    birthday: string;
+    date_of_birth: string;
     email: string;
     cep: string;
     uf: string;
