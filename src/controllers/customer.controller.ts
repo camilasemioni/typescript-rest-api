@@ -8,6 +8,7 @@ import {
 } from '../utils/query-fields.util';
 import axios from 'axios';
 import BadRequestError from '../errors/bad-request.error';
+import NotFoundError from '../errors/not-found.error';
 import { removePassword } from '../utils/customer.util';
 import { formatViaCep } from '../utils/viacep.util';
 import { createCustomerSchemaValidation } from '../middlewares/validation.middleware';
@@ -23,6 +24,9 @@ export const getAllCustomers = async (_: Request, res: Response) => {
 
             if (fieldsList.includes('password')) {
                 throw new BadRequestError('Password access denied');
+            }
+            if (!fieldNames.includes(fieldsList)) {
+                throw new BadRequestError('Invalid query');
             }
         }
 
@@ -69,6 +73,25 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             nbHits: customerList.length,
             customerList,
         });
+    } catch (error) {
+        errorHandler(error, res);
+    }
+};
+
+export const getSingleCustomer = async (
+    _: Request,
+    res: Response,
+) => {
+    try {
+        const customer = await CustomerModel.findById(_.params.id);
+
+        if (!customer) {
+            throw new NotFoundError(
+                `No customer with id '${_.params.id}'`,
+            );
+        }
+
+        res.status(StatusCodes.OK).json(customer);
     } catch (error) {
         errorHandler(error, res);
     }
