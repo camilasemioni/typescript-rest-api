@@ -10,6 +10,7 @@ import Customer from '../models/customer.model';
 import axios from 'axios';
 import CustomAPIError from '../errors/custom-error-class.error';
 import BadRequestError from '../errors/bad-request.error';
+import NotFoundError from '../errors/not-found.error';
 
 export const getAllCustomers = async (_: Request, res: Response) => {
     try {
@@ -76,8 +77,26 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
                 message: 'Unknown error',
             });
-            console.log(error);
         }
+    }
+};
+
+export const getSingleCustomer = async (
+    _: Request,
+    res: Response,
+) => {
+    try {
+        const customer = await customerModel.findById(_.params.id);
+
+        if (!customer) {
+            throw new NotFoundError(
+                `No customer with id ${_.params.id}`,
+            );
+        }
+
+        res.status(StatusCodes.OK).json(customer);
+    } catch (error) {
+        console.log(error);
     }
 };
 
