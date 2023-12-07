@@ -6,7 +6,6 @@ export default interface ICustomer extends Document {
     password: string;
     birthday: string;
     email: string;
-    password: string;
     cep: string;
     uf: string;
     city: string;

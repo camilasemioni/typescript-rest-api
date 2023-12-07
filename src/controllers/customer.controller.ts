@@ -6,6 +6,8 @@ import {
     fieldNames,
     caseInsensitiveFieldNames,
 } from '../utils/query-fields.util';
+import Customer from '../models/customer.model';
+import axios from 'axios';
 import CustomAPIError from '../errors/custom-error-class.error';
 import BadRequestError from '../errors/bad-request.error';
 
@@ -74,15 +76,10 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
                 message: 'Unknown error',
             });
+            console.log(error);
         }
     }
 };
-import { Request, Response } from 'express';
-import Customer from '../models/customer.model';
-import axios from 'axios';
-import BadRequestError from '../errors/bad-request.error';
-import CustomAPIError from '../errors/custom-error-class.error';
-import { StatusCodes } from 'http-status-codes';
 
 function formatViaCep(address: string) {
     if (address.length !== 8) {
@@ -129,6 +126,7 @@ export const createClient = async (req: Request, res: Response) => {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
                 message: 'Unknown error',
             });
+            console.log(error);
         }
     }
 };
