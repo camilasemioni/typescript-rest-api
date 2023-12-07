@@ -34,6 +34,47 @@
                 "tags": [
                     "Client"
                 ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "schema": {
+                            "type": "integer",
+                            "default": 2
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "description": "Field to filter",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "name",
+                                "birthday",
+                                "email",
+                                "cep",
+                                "uf",
+                                "city",
+                                "address",
+                                "number",
+                                "complement",
+                                "neighborhood",
+                                "cpf"
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -207,7 +248,7 @@
                         "type": "string",
                         "example": "522.270.870-56"
                     },
-                    "date_of_birth": {
+                    "birthday": {
                         "type": "string",
                         "example": "25/12/1975"
                     },
