@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { getAllCustomers } from '../../controllers/customer.controller';
+import { getAllCustomers } from '../../controllers/delete-customer.controller';
 import customerModel from '../../models/customer.model';
 
 jest.mock('../../models/customer.model');

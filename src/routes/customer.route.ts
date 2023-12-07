@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteCustomer } from '../controllers/customer.controller';
+import { deleteCustomer } from '../controllers/delete-customer.controller';
 
 const router = express.Router();
 
