@@ -13,7 +13,7 @@
     - [Code Editor](#code-editor)
     - [Dependencies](#dependencies)
 - [Acknowledgments](#acknowledgments)
-  - [Developers:](#developers)
+  - [Developers](#developers)
   - [Date](#date)
 
 
