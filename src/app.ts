@@ -1,5 +1,4 @@
 import express from 'express';
-import 'express-async-errors';
 import 'dotenv/config';
 import connectDB from './database/connect.database';
 import customerRouter from './routes/customer.route';
@@ -15,7 +14,7 @@ app.use('/api/v1', customerRouter);
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use('/api/v1', router);
+app.use('/api/v1', customerRouter);
 
 const start = async () => {
     try {
