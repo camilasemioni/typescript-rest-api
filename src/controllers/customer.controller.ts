@@ -25,6 +25,9 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             if (fieldsList.includes('password')) {
                 throw new BadRequestError('Password access denied');
             }
+            if (!fieldNames.includes(fieldsList)) {
+                throw new BadRequestError('Invalid query');
+            }
         }
 
         const queryObject: IQueries = {};
@@ -84,7 +87,7 @@ export const getSingleCustomer = async (
 
         if (!customer) {
             throw new NotFoundError(
-                `No customer with id ${_.params.id}`,
+                `No customer with id '${_.params.id}'`,
             );
         }
 
