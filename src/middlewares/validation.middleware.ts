@@ -3,7 +3,7 @@ import JoiDate from '@joi/date';
 
 const DateJoi = Joi.extend(JoiDate);
 
-export const createCustomerSchemaValitation = Joi.object({
+export const createCustomerSchemaValidation = Joi.object({
     name: Joi.string()
         .trim(true)
         .pattern(/^[A-Za-zÀ-ÖØ-öø-ÿ '-]{3,50}$/)
@@ -42,7 +42,7 @@ export const createCustomerSchemaValitation = Joi.object({
 
     number: Joi.string()
         .trim()
-        .pattern(/^[0-9]{1,6}[A-Za-z]{1,3}?$/)
+        .pattern(/^[0-9]{1,6}[A-Za-z]{0,3}?$/)
         .messages({
             'string.pattern.base': `The number provided, '{#value}', is not valid. Please provide a valid number.`,
         })
@@ -84,7 +84,7 @@ export const updateCustomerSchemaValitation = Joi.object({
 
     number: Joi.string()
         .trim()
-        .pattern(/^[0-9]{1,6}[A-Za-z]{1,3}?$/)
+        .pattern(/^[0-9]{1,6}[A-Za-z]{0,3}?$/)
         .messages({
             'string.pattern.base': `The number provided, '{#value}', is not valid. Please provide a valid number.`,
         }),
