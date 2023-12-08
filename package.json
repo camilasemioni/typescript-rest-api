@@ -1,13 +1,13 @@
 {
     "name": "node",
     "version": "1.0.0",
-    "main": "app.js",
+    "main": "server.js",
     "author": "Bruno Ortigosa Cruz <brunortigosa@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "start": "node dist/app.js",
+        "start": "node dist/server.js",
         "build": "tsc",
-        "dev": "eslint src --fix && tsc-watch --onSuccess \"node ./dist/app.js\"",
+        "dev": "eslint src --fix && tsc-watch --onSuccess \"node ./dist/server.js\"",
         "lint": "eslint src --fix",
         "test": "jest"
     },
