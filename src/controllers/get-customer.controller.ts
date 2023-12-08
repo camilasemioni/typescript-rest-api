@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import CustomerModel from '../models/customer.model';
+import { CustomerModel } from '../models/customer.model';
 import IQueries from '../interfaces/queries.interface';
 import {
     fieldNames,

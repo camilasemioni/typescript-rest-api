@@ -1,7 +1,6 @@
 import request from 'supertest';
-import { app, server } from '../../app';
+import { app } from '../../app';
 import CustomerModel from '../../models/customer.model';
-import mongoose from 'mongoose';
 
 jest.mock('../../models/customer.model', () => {
     return {
@@ -76,17 +75,5 @@ describe('getAllCustomers()', () => {
 
         expect(result.statusCode).toEqual(400);
         expect(result.body.message).toEqual('Invalid query');
-    });
-
-    afterAll((done) => {
-        mongoose.connection.close().then(() => {
-            if (server) {
-                server.close(() => {
-                    done();
-                });
-            } else {
-                done();
-            }
-        });
     });
 });
