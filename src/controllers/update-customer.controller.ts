@@ -1,17 +1,22 @@
 import { Request, Response } from 'express';
-import customerModel from '../models/customer.model';
+import { CustomerModel } from '../models/customer.model';
 import { StatusCodes } from 'http-status-codes';
 import NotFoundError from '../errors/not-found.error';
 import errorHandler from '../utils/error-handler.util';
-import { updateCustomerSchemaValitation } from '../middlewares/validation.middleware';
+import { validateMiddleware } from '../middlewares/validation.middleware';
+import { updateCustomerSchemaValitation } from '../validations/joi.validation';
+
+const validateUpdateCustomer = validateMiddleware(
+    updateCustomerSchemaValitation,
+);
 
 export const updateCustomer = async (req: Request, res: Response) => {
     try {
         const customerId = req.params.id;
         const payload = req.body;
-        console.log(payload)
+        console.log(payload);
 
-        await updateCustomerSchemaValitation.validateAsync(payload);
+        await validateUpdateCustomer(req, res, () => {});
 
         const {
             name,
@@ -25,7 +30,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
         } = payload;
 
         const existingCustomer =
-            await customerModel.findById(customerId);
+            await CustomerModel.findById(customerId);
         console.log(existingCustomer);
 
         if (!existingCustomer) {
