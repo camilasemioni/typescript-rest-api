@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { app } from '../../app';
-import CustomerModel from '../../models/customer.model';
+import app from '../../app';
+import { CustomerModel } from '../../models/customer.model';
 
 jest.mock('../../models/customer.model', () => {
     return {
