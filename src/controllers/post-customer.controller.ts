@@ -1,6 +1,6 @@
 import { removePassword } from '../utils/customer.util';
 import { formatViaCep } from '../utils/viacep.util';
-import CustomerModel from '../models/customer.model';
+import { CustomerModel } from '../models/customer.model';
 import axios from 'axios';
 import BadRequestError from '../errors/bad-request.error';
 import { StatusCodes } from 'http-status-codes';
