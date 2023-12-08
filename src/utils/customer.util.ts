@@ -4,7 +4,7 @@ export function removePassword(Customer: ICustomer) {
     return {
         name: Customer.name,
         cpf: Customer.cpf,
-        date_of_birth: Customer.date_of_birth,
+        birthday: Customer.birthday,
         email: Customer.email,
         cep: Customer.cep,
         uf: Customer.uf,

@@ -22,7 +22,7 @@ const CustomerSchema = new Schema<ICustomer>({
             message: `The CPF provided is not valid. Please provide a valid CPF.`,
         },
     },
-    date_of_birth: {
+    birthday: {
         type: String,
         required: true,
         validate: {
@@ -34,23 +34,12 @@ const CustomerSchema = new Schema<ICustomer>({
     password: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]*$/.test(
-                    value,
-                ),
-            message: `The password provided is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit.`,
-        },
         select: false,
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        validate: {
-            validator: (value: string) => /\S+@\S+\.\S+/.test(value),
-            message: `The email provided is not valid. Please provide a valid email address.`,
-        },
     },
     cep: {
         type: String,
@@ -65,53 +54,29 @@ const CustomerSchema = new Schema<ICustomer>({
         required: true,
         validate: {
             validator: (value: string) =>
-                /^[0-9]{1,6}$/.test(value),
+                /^[0-9]{1,6}[A-Za-z]{0,3}$/.test(value),
             message: `The number provided is not valid. Please provide a valid number.`,
         },
     },
     uf: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) => /^[A-Z]{2}$/.test(value),
-            message: `The UF provided is not valid. Please provide a valid number.`,
-        },
     },
     city: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{2,50}$/.test(value),
-            message: `The city provided is not valid. Please provide a valid city.`,
-        },
     },
     address: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{3,70}$/.test(value),
-            message: `The address provided is not valid. Please provide a valid address.`,
-        },
     },
     complement: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{3,70}$/.test(value),
-            message: `The complement provided is not valid. Please provide a valid complement.`,
-        },
     },
     neighborhood: {
         type: String,
         required: true,
-        validate: {
-            validator: (value: string) =>
-                /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{2,70}$/.test(value),
-            message: `The neighborhood provided is not valid. Please provide a valid neighborhood.`,
-        },
     },
 });
 
