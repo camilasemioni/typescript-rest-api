@@ -14,18 +14,6 @@ export const getAllCustomers = async (_: Request, res: Response) => {
     try {
         const { sort, fields } = _.query;
 
-        let fieldsList;
-        if (fields) {
-            fieldsList = (fields as string).split(',').join(' ');
-
-            if (fieldsList.includes('password')) {
-                throw new BadRequestError('Password access denied');
-            }
-            if (!fieldNames.includes(fieldsList)) {
-                throw new BadRequestError('Invalid query');
-            }
-        }
-
         const queryObject: IQueries = {};
 
         fieldNames.forEach((field) => {
@@ -51,6 +39,26 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             result = result.sort(sortList);
         } else {
             result = result.sort('name');
+        }
+
+        let fieldsList = '';
+
+        if (fields) {
+            fieldsList = (fields as string).split(',').join(' ');
+
+            if (fieldsList.includes('password')) {
+                throw new BadRequestError('Password access denied');
+            }
+
+            if (!fieldNames.includes(fieldsList)) {
+                throw new BadRequestError('Invalid query');
+            }
+        }
+
+        const allowedFields = ['sort', 'fields', ...fieldNames];
+        const queryKeys = Object.keys(_.query);
+        if (!queryKeys.every((key) => allowedFields.includes(key))) {
+            throw new BadRequestError('Invalid query');
         }
 
         if (fieldsList) {
