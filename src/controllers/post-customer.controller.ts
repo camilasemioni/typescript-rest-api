@@ -1,6 +1,5 @@
 import { removePassword } from '../utils/customer.util';
 import { formatViaCep } from '../utils/viacep.util';
-import { createCustomerSchemaValidation } from '../middlewares/validation.middleware';
 import CustomerModel from '../models/customer.model';
 import axios from 'axios';
 import BadRequestError from '../errors/bad-request.error';
@@ -42,7 +41,6 @@ export const createCustomer = async (req: Request, res: Response) => {
         }
 
         payload.cep = cep;
-        await createCustomerSchemaValidation.validateAsync(payload);
 
         const address = {
             uf: uf,
