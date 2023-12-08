@@ -6,13 +6,25 @@ import {
 import { createCustomer } from '../controllers/post-customer.controller';
 import { Router } from 'express';
 import { updateCustomer } from '../controllers/update-customer.controller';
+import { createCustomerSchemaValidation } from '../validations/joi.validation';
+import { validateMiddleware } from '../middlewares/validation.middleware';
 
 const router = Router();
 
-router.route('/client').get(getAllCustomers).post(createCustomer);
 router
+    .route('/client')
+    .get(getAllCustomers)
+    .post(
+        validateMiddleware(createCustomerSchemaValidation),
+        createCustomer,
+    );
+
+router
+    
     .route('/client/:id')
-    .get(getSingleCustomer).delete(deleteCustomer)
+    
+    .get(getSingleCustomer)
+    .delete(deleteCustomer)
     .put(updateCustomer);
 
 export default router;
