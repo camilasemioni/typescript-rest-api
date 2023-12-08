@@ -57,7 +57,7 @@ export const createCustomer = async (req: Request, res: Response) => {
         const newCustomer = await CustomerModel.create(customer);
 
         const noPasswordCustomer = removePassword(newCustomer);
-        res.status(StatusCodes.OK).json(noPasswordCustomer);
+        res.status(StatusCodes.CREATED).json(noPasswordCustomer);
     } catch (error) {
         errorHandler(error, res);
     }
