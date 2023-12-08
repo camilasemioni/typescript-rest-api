@@ -9,6 +9,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
     try {
         const customerId = req.params.id;
         const payload = req.body;
+        console.log(payload)
 
         await updateCustomerSchemaValitation.validateAsync(payload);
 
