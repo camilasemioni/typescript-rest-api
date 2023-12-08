@@ -13,9 +13,7 @@ describe('deleteCustomer()', () => {
 
         const validCustomerId = 'valid_id';
 
-        const response = await request(app).delete(
-            `/api/v1/client/${validCustomerId}`,
-        );
+        const response = await request(app).delete(`/api/v1/client/${validCustomerId}`);
 
         expect(response.status).toEqual(204);
         expect(response.body).toEqual({});
@@ -27,9 +25,7 @@ describe('deleteCustomer()', () => {
 
         const nonExistentCustomerId = 'nonexistent_id';
 
-        const response = await request(app).delete(
-            `/api/v1/client/${nonExistentCustomerId}`,
-        );
+        const response = await request(app).delete(`/api/v1/client/${nonExistentCustomerId}`);
 
         expect(response.status).toEqual(404);
         expect(response.body).toEqual({
@@ -40,9 +36,7 @@ describe('deleteCustomer()', () => {
     test('should return a 400 error when an invalid ID is provided', async () => {
         const invalidCustomerId = 'invalid_id';
 
-        const response = await request(app).delete(
-            `/api/v1/client/${invalidCustomerId}`,
-        );
+        const response = await request(app).delete(`/api/v1/client/${invalidCustomerId}`);
 
         expect(response.status).toEqual(400);
         expect(response.body).toEqual({
