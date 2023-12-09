@@ -6,6 +6,7 @@ import errorHandler from '../utils/error-handler.util';
 import { validateMiddleware } from '../middlewares/validation.middleware';
 import { updateCustomerSchemaValitation } from '../validations/joi.validation';
 import bcrypt from 'bcrypt';
+import axios from 'axios';
 
 const validateUpdateCustomer = validateMiddleware(
     updateCustomerSchemaValitation,
@@ -15,38 +16,43 @@ export const updateCustomer = async (req: Request, res: Response) => {
     try {
         const customerId = req.params.id;
         const payload = req.body;
-        console.log(payload);
 
         await validateUpdateCustomer(req, res, () => {});
 
-        const {
-            name,
-            cep,
-            uf,
-            city,
-            address,
-            number,
-            complement,
-            neighborhood,
-            password,
-        } = payload;
+        const { name, cep, password, complement } = payload;
 
         const existingCustomer =
             await CustomerModel.findById(customerId);
-        console.log(existingCustomer);
 
         if (!existingCustomer) {
             throw new NotFoundError('Customer not found');
         }
 
         existingCustomer.name = name || existingCustomer.name;
-        existingCustomer.cep = cep || existingCustomer.cep;
-        existingCustomer.uf = uf || existingCustomer.uf;
-        existingCustomer.city = city || existingCustomer.city;
-        existingCustomer.address = address || existingCustomer.address;
-        existingCustomer.number = number || existingCustomer.number;
-        existingCustomer.complement = complement || existingCustomer.complement;
-        existingCustomer.neighborhood = neighborhood || existingCustomer.neighborhood;
+
+        if (cep && existingCustomer.cep !== cep) {
+            const viaCepResponse = await axios.get(
+                `https://viacep.com.br/ws/${cep}/json`,
+            );
+
+            const { uf, localidade, bairro, logradouro } =
+                viaCepResponse.data;
+
+            existingCustomer.cep = cep;
+            existingCustomer.uf = uf || '';
+            existingCustomer.city = localidade || '';
+            existingCustomer.neighborhood = bairro || '';
+            existingCustomer.address = logradouro || '';
+        }
+
+        const validationError = existingCustomer.validateSync();
+        if (validationError) {
+            throw validationError;
+        }
+
+        existingCustomer.number =
+            payload.number || existingCustomer.number;
+        existingCustomer.complement = complement || 'Not informed';
 
         if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
