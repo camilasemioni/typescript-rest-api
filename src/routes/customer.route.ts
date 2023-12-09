@@ -5,7 +5,11 @@ import {
 } from '../controllers/get-customer.controller';
 import { createCustomer } from '../controllers/post-customer.controller';
 import { Router } from 'express';
-import { createCustomerSchemaValidation } from '../validations/joi.validation';
+import { updateCustomer } from '../controllers/update-customer.controller';
+import {
+    createCustomerSchemaValidation,
+    updateCustomerSchemaValitation,
+} from '../validations/joi.validation';
 import { validateMiddleware } from '../middlewares/validation.middleware';
 
 const router = Router();
@@ -21,6 +25,10 @@ router
 router
     .route('/client/:id')
     .get(getSingleCustomer)
-    .delete(deleteCustomer);
+    .delete(deleteCustomer)
+    .put(
+        validateMiddleware(updateCustomerSchemaValitation),
+        updateCustomer,
+    );
 
 export default router;

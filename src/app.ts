@@ -1,5 +1,4 @@
 import express from 'express';
-import 'express-async-errors';
 import 'dotenv/config';
 import customerRouter from './routes/customer.route';
 import swaggerUi from 'swagger-ui-express';
