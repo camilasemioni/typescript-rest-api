@@ -1,46 +1,63 @@
 import request from 'supertest';
+import { StatusCodes } from 'http-status-codes';
 import app from '../../app';
-import { CustomerModel } from '../../models/customer.model';
+import CustomerModel from '../../models/customer.model';
 
 jest.mock('../../models/customer.model', () => ({
     findByIdAndDelete: jest.fn(),
 }));
 
-describe('deleteCustomer()', () => {
+describe('deleteCustomer', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     test('should delete a customer when a valid ID is provided', async () => {
-        
-        (CustomerModel.findByIdAndDelete as jest.Mock).mockResolvedValue({});
+        const userId = '60d6c7e4873e3c9b2401b9b5';
 
-        const validCustomerId = 'valid_id';
+        (
+            CustomerModel.findByIdAndDelete as jest.Mock
+        ).mockResolvedValue({});
 
-        const response = await request(app).delete(`/api/v1/client/${validCustomerId}`);
+        const response = await request(app)
+            .delete(`/api/v1/client/${userId}`)
+            .send();
 
-        expect(response.status).toEqual(204);
+        expect(response.status).toBe(StatusCodes.NO_CONTENT);
         expect(response.body).toEqual({});
     });
 
     test('should return a 404 error when the record does not exist', async () => {
+        const userId = '60d6c7e4873e3c9b2401b9b5';
+        
+        (CustomerModel.findByIdAndDelete as jest.Mock
+        ).mockResolvedValue(null);
 
-        (CustomerModel.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
+        const response = await request(app)
+            .delete(`/api/v1/client/${userId}`)
+            .send();
 
-        const nonExistentCustomerId = 'nonexistent_id';
-
-        const response = await request(app).delete(`/api/v1/client/${nonExistentCustomerId}`);
-
-        expect(response.status).toEqual(404);
+        expect(CustomerModel.findByIdAndDelete).toHaveBeenCalledWith(
+            userId,
+        );
+        expect(response.status).toBe(StatusCodes.NOT_FOUND);
         expect(response.body).toEqual({
-            error: 'Customer not found',
+            error: 404,
+            message: 'Customer not found',
         });
     });
 
     test('should return a 400 error when an invalid ID is provided', async () => {
-        const invalidCustomerId = 'invalid_id';
+        const invalidId = 'invalid_id'
+        
+        const response = await request(app).delete(
+            `/api/v1/client/${invalidId}`,
+        ).send();
 
-        const response = await request(app).delete(`/api/v1/client/${invalidCustomerId}`);
-
-        expect(response.status).toEqual(400);
+        expect(response.status).toBe(StatusCodes.BAD_REQUEST);
         expect(response.body).toEqual({
-            error: 'Invalid customer ID',
+            error: 400,
+            message: `'${invalidId}' is not a valid id`,
         });
     });
 });
