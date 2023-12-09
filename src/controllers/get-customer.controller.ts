@@ -42,7 +42,11 @@ export const getAllCustomers = async (_: Request, res: Response) => {
     let fieldsList: string[] = [];
 
     if (fields) {
-        fieldsList = (fields as string).split(',');
+        if (typeof fields === 'string') {
+            fieldsList = fields.split(',');
+        } else if (Array.isArray(fields)) {
+            fieldsList = fields as string[];
+        }
 
         if (fieldsList.includes('password')) {
             throw new BadRequestError('Password access denied');
