@@ -50,27 +50,62 @@
                         "description": "Number of items per page",
                         "schema": {
                             "type": "integer",
-                            "default": 2
+                            "default": 5
                         }
                     },
                     {
                         "name": "fields",
                         "in": "query",
-                        "description": "Field to filter",
+                        "description": "Filter by (hold ctrl to select multiple fields)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "name",
+                                    "cpf",
+                                    "birthday",
+                                    "email",
+                                    "cep",
+                                    "number",
+                                    "uf",
+                                    "city",
+                                    "address",
+                                    "complement",
+                                    "neighborhood"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort by",
                         "schema": {
                             "type": "string",
                             "enum": [
                                 "name",
+                                "cpf",
                                 "birthday",
                                 "email",
                                 "cep",
+                                "number",
                                 "uf",
                                 "city",
                                 "address",
-                                "number",
                                 "complement",
                                 "neighborhood",
-                                "cpf"
+                                "-name",
+                                "-cpf",
+                                "-birthday",
+                                "-email",
+                                "-cep",
+                                "-number",
+                                "-uf",
+                                "-city",
+                                "-address",
+                                "-complement",
+                                "-neighborhood"
                             ]
                         }
                     }
@@ -104,8 +139,8 @@
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "Updated Client Successfully",
+                    "201": {
+                        "description": "Created Client Successfully",
                         "content": {
                             "application/json": {}
                         }
