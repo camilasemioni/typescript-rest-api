@@ -1,7 +1,10 @@
-import BadRequestError from "../errors/bad-request.error";
+import { Request } from 'express';
+import BadRequestError from '../errors/bad-request.error';
 
-export default function formatCPF(cpf: string): string {
-    const match = cpf.match(/^(\d{3})(\d{3})(\d{3})(\d{2})$/);
+export default function formatCpf(req: Request): string {
+    const cpfPayload = req.body.cpf.replace(/[^0-9]/g, '');
+
+    const match = cpfPayload.match(/^(\d{3})(\d{3})(\d{3})(\d{2})$/);
 
     if (match) {
         const formattedCPF = `${match[1]}.${match[2]}.${match[3]}-${match[4]}`;
