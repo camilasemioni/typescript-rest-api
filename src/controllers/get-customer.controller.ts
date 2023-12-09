@@ -32,9 +32,17 @@ export const getAllCustomers = async (_: Request, res: Response) => {
 
     let result = CustomerModel.find(queryObject);
 
+    let sortList;
     if (sort) {
-        const sortList = (sort as string).split(',').join(' ');
-        result = result.sort(sortList);
+        sortList = (sort as string).split(',');
+        if (
+            !sortList.every((field: string) =>
+                fieldNames.includes(field),
+            )
+        ) {
+            throw new BadRequestError('Invalid query');
+        }
+        result = result.sort(sortList.join(' '));
     } else {
         result = result.sort('name');
     }
