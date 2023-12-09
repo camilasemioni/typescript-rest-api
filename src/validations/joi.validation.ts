@@ -8,7 +8,7 @@ export const createCustomerSchemaValidation = Joi.object({
         .trim(true)
         .pattern(/^[A-Za-zÀ-ÖØ-öø-ÿ '-]{3,50}$/)
         .messages({
-            'string.pattern.base': `The name provided, '{#value}', is not valid. Please provide a valid name.`,
+            'string.pattern.base': `The name provided, '{#value}', is not valid. Please provide a valid name. (Joi)`,
         })
         .required(),
 
@@ -16,7 +16,7 @@ export const createCustomerSchemaValidation = Joi.object({
         .trim(true)
         .pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
         .messages({
-            'string.pattern.base': `The CPF provided, '{#value}', is not valid. Please provide a valid CPF.`,
+            'string.pattern.base': `The CPF provided, '{#value}', is not valid. Please provide a valid CPF. (Joi)`,
         })
         .required(),
 
@@ -24,7 +24,7 @@ export const createCustomerSchemaValidation = Joi.object({
         .trim(true)
         .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,50}$/)
         .messages({
-            'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit.`,
+            'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit. (Joi)`,
         })
         .required(),
 
@@ -36,7 +36,7 @@ export const createCustomerSchemaValidation = Joi.object({
         .trim(true)
         .pattern(/^\d{5}-\d{3}$/)
         .messages({
-            'string.pattern.base': `The CEP provided, '{#value}', is not valid. Please provide a valid CEP.`,
+            'string.pattern.base': `The CEP provided, '{#value}', is not valid. Please provide a valid CEP. (Joi)`,
         })
         .required(),
 
@@ -44,7 +44,7 @@ export const createCustomerSchemaValidation = Joi.object({
         .trim()
         .pattern(/^[0-9]{1,6}[A-Za-z]{0,3}?$/)
         .messages({
-            'string.pattern.base': `The number provided, '{#value}', is not valid. Please provide a valid number.`,
+            'string.pattern.base': `The number provided, '{#value}', is not valid. Please provide a valid number. (Joi)`,
         })
         .required(),
 });
@@ -54,21 +54,21 @@ export const updateCustomerSchemaValitation = Joi.object({
         .trim(true)
         .pattern(/^[A-Za-zÀ-ÖØ-öø-ÿ '-]{3,50}$/)
         .messages({
-            'string.pattern.base': `The name provided, '{#value}', is not valid. Please provide a valid name.`,
+            'string.pattern.base': `The name provided, '{#value}', is not valid. Please provide a valid name. (Joi)`,
         }),
 
     cpf: Joi.string()
         .trim(true)
         .pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
         .messages({
-            'string.pattern.base': `The CPF provided, '{#value}', is not valid. Please provide a valid CPF.`,
+            'string.pattern.base': `The CPF provided, '{#value}', is not valid. Please provide a valid CPF. (Joi)`,
         }),
 
     password: Joi.string()
         .trim(true)
         .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,50}$/)
         .messages({
-            'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit.`,
+            'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit. (Joi)`,
         }),
 
     birthday: DateJoi.date().format(['DD/MM/YYYY']),
@@ -79,13 +79,13 @@ export const updateCustomerSchemaValitation = Joi.object({
         .trim(true)
         .pattern(/^\d{5}-\d{3}$/)
         .messages({
-            'string.pattern.base': `The CEP provided, '{#value}', is not valid. Please provide a valid CEP.`,
+            'string.pattern.base': `The CEP provided, '{#value}', is not valid. Please provide a valid CEP. (Joi)`,
         }),
 
     number: Joi.string()
         .trim()
         .pattern(/^[0-9]{1,6}[A-Za-z]{0,3}?$/)
         .messages({
-            'string.pattern.base': `The number provided, '{#value}', is not valid. Please provide a valid number.`,
+            'string.pattern.base': `The number provided, '{#value}', is not valid. Please provide a valid number. (Joi)`,
         }),
 });
