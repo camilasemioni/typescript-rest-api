@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CustomerModel } from '../models/customer.model';
+import CustomerModel from '../models/customer.model';
 import { StatusCodes } from 'http-status-codes';
 import errorHandler from '../utils/error-handler.util';
 import NotFoundError from '../errors/not-found.error';

@@ -216,7 +216,7 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "Deleted Client Successfully",
                         "content": {
                             "application/json": {}
