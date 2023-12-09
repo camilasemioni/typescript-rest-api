@@ -5,12 +5,25 @@ import IQueries from '../interfaces/queries.interface';
 import {
     fieldNames,
     caseInsensitiveFieldNames,
+    allowedQueries,
 } from '../utils/query-fields.util';
 import BadRequestError from '../errors/bad-request.error';
 import NotFoundError from '../errors/not-found.error';
 
 export const getAllCustomers = async (_: Request, res: Response) => {
-    const { sort, fields } = _.query;
+    const count = await CustomerModel.countDocuments();
+    if (count === 0) {
+        return res.status(StatusCodes.OK).json({});
+    }
+
+    const queryKeys: string[] = Object.keys(_.query);
+    if (
+        !queryKeys.every((key: string) =>
+            allowedQueries.includes(key),
+        )
+    ) {
+        throw new BadRequestError('Invalid query');
+    }
 
     const queryObject: IQueries = {};
 
@@ -25,16 +38,12 @@ export const getAllCustomers = async (_: Request, res: Response) => {
         }
     });
 
-    const count = await CustomerModel.countDocuments();
-    if (count === 0) {
-        return res.status(StatusCodes.OK).json({});
-    }
-
     let result = CustomerModel.find(queryObject);
 
-    let sortList;
+    const { sort, fields } = _.query;
+
     if (sort) {
-        sortList = (sort as string).split(',');
+        const sortList = (sort as string).split(',');
         if (
             !sortList.every((field: string) =>
                 fieldNames.includes(field),
@@ -47,17 +56,13 @@ export const getAllCustomers = async (_: Request, res: Response) => {
         result = result.sort('name');
     }
 
-    let fieldsList: string[] = [];
-
     if (fields) {
+        let fieldsList: string[] = [];
+
         if (typeof fields === 'string') {
             fieldsList = fields.split(',');
         } else if (Array.isArray(fields)) {
             fieldsList = fields as string[];
-        }
-
-        if (fieldsList.includes('password')) {
-            throw new BadRequestError('Password access denied');
         }
 
         if (
@@ -67,25 +72,7 @@ export const getAllCustomers = async (_: Request, res: Response) => {
         ) {
             throw new BadRequestError('Invalid query');
         }
-    }
 
-    const allowedQueries: string[] = [
-        'limit',
-        'page',
-        'sort',
-        'fields',
-        ...fieldNames,
-    ];
-    const queryKeys: string[] = Object.keys(_.query);
-    if (
-        !queryKeys.every((key: string) =>
-            allowedQueries.includes(key),
-        )
-    ) {
-        throw new BadRequestError('Invalid query');
-    }
-
-    if (fieldsList.length) {
         result = result.select(fieldsList.join(' '));
     }
 
