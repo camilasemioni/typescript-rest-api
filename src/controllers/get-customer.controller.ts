@@ -32,7 +32,7 @@ export const getAllCustomers = async (_: Request, res: Response) => {
 
     let result = CustomerModel.find(queryObject);
 
-    if (fieldNames.includes('sort')) {
+    if (sort) {
         const sortList = (sort as string).split(',').join(' ');
         result = result.sort(sortList);
     } else {
