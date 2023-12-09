@@ -6,12 +6,19 @@ import bcrypt from 'bcrypt';
 import axios from 'axios';
 import { formatViaCep } from '../utils/viacep.util';
 import BadRequestError from '../errors/bad-request.error';
+import UnauthorizedError from '../errors/unauthorized.error';
 
 export const updateCustomer = async (req: Request, res: Response) => {
     const customerId = req.params.id;
     const payload = req.body;
 
-    const { name, cep, password, complement } = payload;
+    const { name, cpf, email, cep, password, complement } = payload;
+
+    if (cpf || email) {
+        throw new UnauthorizedError(
+            `${cpf ? 'CPF' : 'Email'} cannot be changed`,
+        );
+    }
 
     const existingCustomer = await CustomerModel.findById(customerId);
 
@@ -60,7 +67,5 @@ export const updateCustomer = async (req: Request, res: Response) => {
 
     await existingCustomer.save();
 
-    res.status(StatusCodes.OK).json({
-        message: 'Customer updated successfully',
-    });
+    res.status(StatusCodes.OK).json(existingCustomer);
 };
