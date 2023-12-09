@@ -39,34 +39,42 @@ export const getAllCustomers = async (_: Request, res: Response) => {
         result = result.sort('name');
     }
 
-    let fieldsList = '';
+    let fieldsList: string[] = [];
 
     if (fields) {
-        fieldsList = (fields as string).split(',').join(' ');
+        fieldsList = (fields as string).split(',');
 
         if (fieldsList.includes('password')) {
             throw new BadRequestError('Password access denied');
         }
 
-        if (!fieldNames.includes(fieldsList)) {
+        if (
+            !fieldsList.every((field: string) =>
+                fieldNames.includes(field),
+            )
+        ) {
             throw new BadRequestError('Invalid query');
         }
     }
 
-    const allowedQueries = [
+    const allowedQueries: string[] = [
         'limit',
         'page',
         'sort',
         'fields',
         ...fieldNames,
     ];
-    const queryKeys = Object.keys(_.query);
-    if (!queryKeys.every((key) => allowedQueries.includes(key))) {
+    const queryKeys: string[] = Object.keys(_.query);
+    if (
+        !queryKeys.every((key: string) =>
+            allowedQueries.includes(key),
+        )
+    ) {
         throw new BadRequestError('Invalid query');
     }
 
-    if (fieldsList) {
-        result = result.select(fieldsList);
+    if (fieldsList.length) {
+        result = result.select(fieldsList.join(' '));
     }
 
     const page = +_.query.page! || 1;
