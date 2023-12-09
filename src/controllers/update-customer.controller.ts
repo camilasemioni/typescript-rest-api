@@ -7,6 +7,8 @@ import { validateMiddleware } from '../middlewares/validation.middleware';
 import { updateCustomerSchemaValitation } from '../validations/joi.validation';
 import bcrypt from 'bcrypt';
 import axios from 'axios';
+import { formatViaCep } from '../utils/viacep.util';
+import BadRequestError from '../errors/bad-request.error';
 
 const validateUpdateCustomer = validateMiddleware(
     updateCustomerSchemaValitation,
@@ -31,12 +33,21 @@ export const updateCustomer = async (req: Request, res: Response) => {
         existingCustomer.name = name || existingCustomer.name;
 
         if (cep && existingCustomer.cep !== cep) {
-            const viaCepResponse = await axios.get(
-                `https://viacep.com.br/ws/${cep}/json`,
-            );
+            const cepPayload = cep.replace(/[^0-9]/g, '');
+
+            formatViaCep(cepPayload);
+            const addressUrl = `https://viacep.com.br/ws/${cepPayload}/json`;
+            const viaCepResponse = (await axios.get(addressUrl)).data;
+
+            if (
+                JSON.stringify(viaCepResponse) ===
+                JSON.stringify({ erro: true })
+            ) {
+                throw new BadRequestError('CEP does not exist');
+            }
 
             const { uf, localidade, bairro, logradouro } =
-                viaCepResponse.data;
+                viaCepResponse;
 
             existingCustomer.cep = cep;
             existingCustomer.uf = uf || '';
