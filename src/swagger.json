@@ -14,9 +14,7 @@
                 },
                 "version": {
                     "default": "v1",
-                    "enum": [
-                        "v1"
-                    ]
+                    "enum": ["v1"]
                 }
             }
         }
@@ -31,9 +29,7 @@
         "/client": {
             "get": {
                 "summary": "Gets all clients",
-                "tags": [
-                    "Client"
-                ],
+                "tags": ["Client"],
                 "parameters": [
                     {
                         "name": "page",
@@ -124,9 +120,7 @@
             },
             "post": {
                 "summary": "Creates a client",
-                "tags": [
-                    "Client"
-                ],
+                "tags": ["Client"],
                 "requestBody": {
                     "description": "Client data to be created",
                     "required": false,
@@ -157,9 +151,7 @@
         "/client/{clientId}": {
             "get": {
                 "summary": "Gets the specified client",
-                "tags": [
-                    "Client"
-                ],
+                "tags": ["Client"],
                 "parameters": [
                     {
                         "name": "clientId",
@@ -191,9 +183,7 @@
             },
             "put": {
                 "summary": "Updates a client",
-                "tags": [
-                    "Client"
-                ],
+                "tags": ["Client"],
                 "parameters": [
                     {
                         "name": "clientId",
@@ -236,9 +226,7 @@
             },
             "delete": {
                 "summary": "Deletes a client",
-                "tags": [
-                    "Client"
-                ],
+                "tags": ["Client"],
                 "parameters": [
                     {
                         "name": "clientId",
@@ -314,9 +302,9 @@
                         "type": "string",
                         "example": "Jorge Ramos"
                     },
-                    "cpf": {
+                    "cep": {
                         "type": "string",
-                        "example": "655.196.200-91"
+                        "example": "22261-090"
                     }
                 }
             }
