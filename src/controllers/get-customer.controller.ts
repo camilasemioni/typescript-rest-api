@@ -5,16 +5,30 @@ import IQueries from '../interfaces/queries.interface';
 import {
     fieldNames,
     caseInsensitiveFieldNames,
+    allowedQueries,
+    validateQueries,
 } from '../utils/query-fields.util';
 import BadRequestError from '../errors/bad-request.error';
 import NotFoundError from '../errors/not-found.error';
 
 export const getAllCustomers = async (_: Request, res: Response) => {
-    const { sort, fields } = _.query;
+    const count = await CustomerModel.countDocuments();
+    if (count === 0) {
+        return res.status(StatusCodes.OK).json({});
+    }
+
+    const queryKeys: string[] = Object.keys(_.query);
+    if (
+        !queryKeys.every((key: string) =>
+            allowedQueries.includes(key),
+        )
+    ) {
+        throw new BadRequestError('Invalid query');
+    }
 
     const queryObject: IQueries = {};
 
-    fieldNames.forEach((field) => {
+    fieldNames.map((field) => {
         if (_.query[field]) {
             queryObject[field] = {
                 $regex: _.query[field] as string,
@@ -24,49 +38,22 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             }
         }
     });
-
-    const count = await CustomerModel.countDocuments();
-    if (count === 0) {
-        return res.status(StatusCodes.OK).json({});
-    }
-
     let result = CustomerModel.find(queryObject);
 
+    const { sort, fields } = _.query;
+
     if (sort) {
-        const sortList = (sort as string).split(',').join(' ');
-        result = result.sort(sortList);
+        result = result.sort(
+            validateQueries(sort as string | string[]),
+        );
     } else {
         result = result.sort('name');
     }
 
-    let fieldsList = '';
-
     if (fields) {
-        fieldsList = (fields as string).split(',').join(' ');
-
-        if (fieldsList.includes('password')) {
-            throw new BadRequestError('Password access denied');
-        }
-
-        if (!fieldNames.includes(fieldsList)) {
-            throw new BadRequestError('Invalid query');
-        }
-    }
-
-    const allowedQueries = [
-        'limit',
-        'page',
-        'sort',
-        'fields',
-        ...fieldNames,
-    ];
-    const queryKeys = Object.keys(_.query);
-    if (!queryKeys.every((key) => allowedQueries.includes(key))) {
-        throw new BadRequestError('Invalid query');
-    }
-
-    if (fieldsList) {
-        result = result.select(fieldsList);
+        result = result.select(
+            validateQueries(fields as string | string[])!,
+        );
     }
 
     const page = +_.query.page! || 1;
