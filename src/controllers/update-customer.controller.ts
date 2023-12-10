@@ -6,12 +6,13 @@ import BadRequestError from '../errors/bad-request.error';
 import bcrypt from 'bcrypt';
 import axios from 'axios';
 import UnauthorizedError from '../errors/unauthorized.error';
+import { removePassword } from '../utils/customer.util';
 
 export const updateCustomer = async (req: Request, res: Response) => {
     const customerId = req.params.id;
     const payload = req.body;
 
-    const { name, cpf, email, cep, password, complement } = payload;
+    const { name, cpf, email, cep, password } = payload;
 
     if (cpf || email) {
         throw new UnauthorizedError(
@@ -27,14 +28,6 @@ export const updateCustomer = async (req: Request, res: Response) => {
 
     existingCustomer.name = name || existingCustomer.name;
 
-    if (cpf && cpf !== existingCustomer.cpf) {
-        throw new BadRequestError('Not allowed to update CPF');
-    }
-
-    if (email && email !== existingCustomer.email) {
-        throw new BadRequestError('Not allowed to update email');
-    }
-
     if (cep && existingCustomer.cep !== cep) {
         const addressUrl = `https://viacep.com.br/ws/${cep}/json`;
         const viaCepResponse = (await axios.get(addressUrl)).data;
@@ -46,23 +39,19 @@ export const updateCustomer = async (req: Request, res: Response) => {
             throw new BadRequestError('CEP does not exist');
         }
 
-        const { uf, localidade, bairro, logradouro } = viaCepResponse;
+        const { uf, localidade, bairro, logradouro, complemento } =
+            viaCepResponse;
 
         existingCustomer.cep = cep;
         existingCustomer.uf = uf;
         existingCustomer.city = localidade || 'Not informed';
         existingCustomer.neighborhood = bairro || 'Not informed';
         existingCustomer.address = logradouro || 'Not informed';
-    }
-
-    const validationError = existingCustomer.validateSync();
-    if (validationError) {
-        throw validationError;
+        existingCustomer.complement = complemento || 'Not informed';
     }
 
     existingCustomer.number =
         payload.number || existingCustomer.number;
-    existingCustomer.complement = complement || 'Not informed';
 
     if (password) {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -71,5 +60,6 @@ export const updateCustomer = async (req: Request, res: Response) => {
 
     await existingCustomer.save();
 
-    res.status(StatusCodes.OK).json(existingCustomer);
+    const noPasswordCustomer = removePassword(existingCustomer);
+    res.status(StatusCodes.OK).json(noPasswordCustomer);
 };
