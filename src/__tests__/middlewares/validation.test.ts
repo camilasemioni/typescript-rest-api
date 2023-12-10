@@ -5,7 +5,7 @@ import { createCustomer } from '../../controllers/post-customer.controller';
 jest.mock('../../controllers/post-customer.controller');
 
 describe('POST /client', () => {
-    it('should validate the request body and create a new customer', async () => {
+    test('should validate the request body and create a new customer', async () => {
         (createCustomer as jest.Mock).mockImplementation(
             (req, res) => {
                 res.status(201).json(req.body);
@@ -27,7 +27,7 @@ describe('POST /client', () => {
         expect(res.body.name).toEqual('John Doe');
     });
 
-    it('should return 400 if the request body is invalid', async () => {
+    test('should return 400 if the request body is invalid', async () => {
         const res = await request(app).post('/api/v1/client').send({
             name: 'John Doe',
             cpf: 'invalid cpf',
