@@ -7,11 +7,19 @@ import bcrypt from 'bcrypt';
 import axios from 'axios';
 import { formatViaCep } from '../utils/viacep.util';
 
+import UnauthorizedError from '../errors/unauthorized.error';
+
 export const updateCustomer = async (req: Request, res: Response) => {
     const customerId = req.params.id;
     const payload = req.body;
 
-    const { name, cep, password, complement, cpf, email } = payload;
+    const { name, cpf, email, cep, password, complement } = payload;
+
+    if (cpf || email) {
+        throw new UnauthorizedError(
+            `${cpf ? 'CPF' : 'Email'} cannot be changed`,
+        );
+    }
 
     const existingCustomer = await CustomerModel.findById(customerId);
 
@@ -46,10 +54,10 @@ export const updateCustomer = async (req: Request, res: Response) => {
         const { uf, localidade, bairro, logradouro } = viaCepResponse;
 
         existingCustomer.cep = cep;
-        existingCustomer.uf = uf || '';
-        existingCustomer.city = localidade || '';
-        existingCustomer.neighborhood = bairro || '';
-        existingCustomer.address = logradouro || '';
+        existingCustomer.uf = uf;
+        existingCustomer.city = localidade || 'Not informed';
+        existingCustomer.neighborhood = bairro || 'Not informed';
+        existingCustomer.address = logradouro || 'Not informed';
     }
 
     const validationError = existingCustomer.validateSync();
@@ -68,7 +76,5 @@ export const updateCustomer = async (req: Request, res: Response) => {
 
     await existingCustomer.save();
 
-    res.status(StatusCodes.OK).json({
-        message: 'Customer updated successfully',
-    });
+    res.status(StatusCodes.OK).json(existingCustomer);
 };
