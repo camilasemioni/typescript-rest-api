@@ -62,11 +62,11 @@ export const getAllCustomers = async (_: Request, res: Response) => {
 
     result = result.skip(skip).limit(limit);
 
-    const customerList = await result;
+    const clients = await result;
 
     res.status(StatusCodes.OK).json({
-        nbHits: customerList.length,
-        customerList,
+        numberOfClients: clients.length,
+        clients,
     });
 };
 
