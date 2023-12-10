@@ -33,22 +33,22 @@ describe('getAllCustomers()', () => {
     });
 
     test('should return correct format if the collection is not empty', async () => {
-        const customerList = [
+        const clients = [
             { name: 'Customer 1' },
             { name: 'Customer 2' },
         ];
 
         (CustomerModel.find as jest.Mock).mockReturnValue({
             ...CustomerModel.find(),
-            limit: jest.fn().mockImplementation(() => customerList),
+            limit: jest.fn().mockImplementation(() => clients),
         });
 
         const result = await request(app).get('/api/v1/client');
 
         expect(result.statusCode).toEqual(200);
         expect(result.body).toEqual({
-            nbHits: customerList.length,
-            customerList,
+            numberOfClients: clients.length,
+            clients,
         });
     });
 
