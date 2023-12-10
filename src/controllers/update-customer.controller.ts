@@ -5,8 +5,6 @@ import NotFoundError from '../errors/not-found.error';
 import BadRequestError from '../errors/bad-request.error';
 import bcrypt from 'bcrypt';
 import axios from 'axios';
-import { formatViaCep } from '../utils/viacep.util';
-
 import UnauthorizedError from '../errors/unauthorized.error';
 
 export const updateCustomer = async (req: Request, res: Response) => {
@@ -38,10 +36,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
     }
 
     if (cep && existingCustomer.cep !== cep) {
-        const cepPayload = cep.replace(/[^0-9]/g, '');
-
-        formatViaCep(cepPayload);
-        const addressUrl = `https://viacep.com.br/ws/${cepPayload}/json`;
+        const addressUrl = `https://viacep.com.br/ws/${cep}/json`;
         const viaCepResponse = (await axios.get(addressUrl)).data;
 
         if (

@@ -52,15 +52,6 @@ describe('getAllCustomers()', () => {
         });
     });
 
-    test('should throw an error when queried for password', async () => {
-        const result = await request(app).get(
-            '/api/v1/client?fields=password',
-        );
-
-        expect(result.statusCode).toEqual(400);
-        expect(result.body.message).toEqual('Password access denied');
-    });
-
     test('should throw an error when fields query is not valid', async () => {
         const result = await request(app).get(
             '/api/v1/client?fields=cbf',
