@@ -28,7 +28,7 @@ export const getAllCustomers = async (_: Request, res: Response) => {
 
     const queryObject: IQueries = {};
 
-    fieldNames.forEach((field) => {
+    fieldNames.map((field) => {
         if (_.query[field]) {
             queryObject[field] = {
                 $regex: _.query[field] as string,
@@ -38,7 +38,6 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             }
         }
     });
-
     let result = CustomerModel.find(queryObject);
 
     const { sort, fields } = _.query;
