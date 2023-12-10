@@ -22,15 +22,15 @@ export const createCustomerSchemaValidation = Joi.object({
 
     password: Joi.string()
         .trim(true)
-        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,50}$/)
+        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,50}$/)
         .messages({
-            'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit. (Joi)`,
+            'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 6 characters, including at least one uppercase letter, one lowercase letter, and one digit. (Joi)`,
         })
         .required(),
 
     birthday: DateJoi.date().format(['DD/MM/YYYY']).required(),
 
-    email: Joi.string().trim().email().required(),
+    email: Joi.string().trim(true).email().required(),
 
     cep: Joi.string()
         .trim(true)
@@ -41,7 +41,7 @@ export const createCustomerSchemaValidation = Joi.object({
         .required(),
 
     number: Joi.string()
-        .trim()
+        .trim(true)
         .pattern(/^[0-9]{1,6}[A-Za-z]{0,3}?$/)
         .messages({
             'string.pattern.base': `The number provided, '{#value}', is not valid. Please provide a valid number. (Joi)`,
@@ -66,14 +66,14 @@ export const updateCustomerSchemaValitation = Joi.object({
 
     password: Joi.string()
         .trim(true)
-        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,50}$/)
+        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,50}$/)
         .messages({
-            'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 8 characters, including at least one uppercase letter, one lowercase letter, and one digit. (Joi)`,
+            'string.pattern.base': `The password provided, '{#value}', is not valid. Password must be a minimum of 6 characters, including at least one uppercase letter, one lowercase letter, and one digit. (Joi)`,
         }),
 
     birthday: DateJoi.date().format(['DD/MM/YYYY']),
 
-    email: Joi.string().trim().email(),
+    email: Joi.string().trim(true).email(),
 
     cep: Joi.string()
         .trim(true)
@@ -83,7 +83,7 @@ export const updateCustomerSchemaValitation = Joi.object({
         }),
 
     number: Joi.string()
-        .trim()
+        .trim(true)
         .pattern(/^[0-9]{1,6}[A-Za-z]{0,3}?$/)
         .messages({
             'string.pattern.base': `The number provided, '{#value}', is not valid. Please provide a valid number. (Joi)`,
