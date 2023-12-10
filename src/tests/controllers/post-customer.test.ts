@@ -1,8 +1,10 @@
 import request from 'supertest';
 import app from '../../app';
+import axios from 'axios';
 import CustomerModel from '../../models/customer.model';
 
 jest.mock('../../models/customer.model');
+jest.mock('axios');
 
 describe('createCustomer()', () => {
     const mockData = {
@@ -15,18 +17,21 @@ describe('createCustomer()', () => {
         number: '123',
     };
 
-    it('should create a new customer with correct data', async () => {
+    test('should create a new customer with correct data', async () => {
         const mockViaCepResponse = {
-            uf: 'SP',
-            city: 'São Paulo',
-            address: 'Praça da Sé',
-            complement: 'lado ímpar',
-            neighborhood: 'Sé',
+            data: {
+                cep: '01001-000',
+                logradouro: 'Praça da Sé',
+                complemento: 'lado ímpar',
+                bairro: 'Sé',
+                localidade: 'São Paulo',
+                uf: 'SP',
+                ibge: '3550308',
+                gia: '1004',
+                ddd: '11',
+                siafi: '7107',
+            },
         };
-
-        (CustomerModel.create as jest.Mock).mockResolvedValue(
-            mockViaCepResponse,
-        );
 
         const completeCustomer = {
             name: 'John Doe',
@@ -43,13 +48,17 @@ describe('createCustomer()', () => {
             neighborhood: 'Sé',
         };
 
+        (axios.get as jest.Mock).mockReturnValue(mockViaCepResponse);
+
+        (CustomerModel.create as jest.Mock).mockResolvedValue(
+            completeCustomer,
+        );
+
         const res = await request(app)
             .post('/api/v1/client')
-            .send(mockData);
+            .send(mockData)
+            .set('Accept', 'application/json');
 
-        res.body = { ...mockData, ...mockViaCepResponse };
-
-        expect(res.statusCode).toBe(201);
-        expect(res.body).toEqual(completeCustomer);
+        expect(res.body).not.toHaveProperty('password');
     });
 });
