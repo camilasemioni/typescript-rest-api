@@ -2,16 +2,16 @@ import { Request, Response } from 'express';
 import CustomerModel from '../models/customer.model';
 import { StatusCodes } from 'http-status-codes';
 import NotFoundError from '../errors/not-found.error';
+import BadRequestError from '../errors/bad-request.error';
 import bcrypt from 'bcrypt';
 import axios from 'axios';
 import { formatViaCep } from '../utils/viacep.util';
-import BadRequestError from '../errors/bad-request.error';
 
 export const updateCustomer = async (req: Request, res: Response) => {
     const customerId = req.params.id;
     const payload = req.body;
 
-    const { name, cep, password, complement } = payload;
+    const { name, cep, password, complement, cpf, email } = payload;
 
     const existingCustomer = await CustomerModel.findById(customerId);
 
@@ -20,6 +20,14 @@ export const updateCustomer = async (req: Request, res: Response) => {
     }
 
     existingCustomer.name = name || existingCustomer.name;
+
+    if (cpf && cpf !== existingCustomer.cpf) {
+        throw new BadRequestError('Not allowed to update CPF');
+    }
+
+    if (email && email !== existingCustomer.email) {
+        throw new BadRequestError('Not allowed to update email');
+    }
 
     if (cep && existingCustomer.cep !== cep) {
         const cepPayload = cep.replace(/[^0-9]/g, '');
