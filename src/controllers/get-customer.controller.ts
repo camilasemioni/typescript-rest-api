@@ -6,6 +6,7 @@ import {
     fieldNames,
     caseInsensitiveFieldNames,
     allowedQueries,
+    validateQueries,
 } from '../utils/query-fields.util';
 import BadRequestError from '../errors/bad-request.error';
 import NotFoundError from '../errors/not-found.error';
@@ -43,37 +44,17 @@ export const getAllCustomers = async (_: Request, res: Response) => {
     const { sort, fields } = _.query;
 
     if (sort) {
-        const sortList = (sort as string).split(',');
-        if (
-            !sortList.every((field: string) =>
-                fieldNames.includes(field),
-            )
-        ) {
-            throw new BadRequestError('Invalid query');
-        }
-        result = result.sort(sortList.join(' '));
+        result = result.sort(
+            validateQueries(sort as string | string[]),
+        );
     } else {
         result = result.sort('name');
     }
 
     if (fields) {
-        let fieldsList: string[] = [];
-
-        if (typeof fields === 'string') {
-            fieldsList = fields.split(',');
-        } else if (Array.isArray(fields)) {
-            fieldsList = fields as string[];
-        }
-
-        if (
-            !fieldsList.every((field: string) =>
-                fieldNames.includes(field),
-            )
-        ) {
-            throw new BadRequestError('Invalid query');
-        }
-
-        result = result.select(fieldsList.join(' '));
+        result = result.select(
+            validateQueries(fields as string | string[]),
+        );
     }
 
     const page = +_.query.page! || 1;
