@@ -1,3 +1,5 @@
+import BadRequestError from '../errors/bad-request.error';
+
 export const fieldNames = [
     'name',
     'cpf',
@@ -44,3 +46,21 @@ export const allowedQueries = [
     'fields',
     ...fieldNames,
 ];
+
+export const validateQueries = (queries: string | string[]) => {
+    let queryList: string[] = [];
+
+    if (typeof queries === 'string') {
+        queryList = queries.split(',');
+    } else if (Array.isArray(queries)) {
+        queryList = queries as string[];
+    }
+    if (
+        !queryList.every((query: string) =>
+            fieldNames.includes(query),
+        )
+    ) {
+        throw new BadRequestError('Invalid query');
+    }
+    return queryList.join(' ');
+};
