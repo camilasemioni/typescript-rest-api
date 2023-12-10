@@ -1,9 +1,25 @@
 import request from 'supertest';
 import app from '../../app';
 import axios from 'axios';
+import { hash } from 'bcrypt';
 import CustomerModel from '../../models/customer.model';
+import { StatusCodes } from 'http-status-codes';
 
-jest.mock('../../models/customer.model');
+jest.mock('../../models/customer.model', () => {
+    return {
+        create: jest.fn((customer) => {
+            return {
+                _id: '6570ba4e2c13eb5171d4fa3e',
+                ...customer,
+            };
+        }),
+    };
+});
+jest.mock('bcrypt', () => {
+    return {
+        hash: jest.fn(),
+    };
+});
 jest.mock('axios');
 
 describe('createCustomer()', () => {
@@ -50,9 +66,9 @@ describe('createCustomer()', () => {
 
         (axios.get as jest.Mock).mockReturnValue(mockViaCepResponse);
 
-        (CustomerModel.create as jest.Mock).mockResolvedValue(
-            completeCustomer,
-        );
+        (hash as jest.Mock).mockResolvedValueOnce('mocked-hash');
+
+        CustomerModel.create(completeCustomer);
 
         const res = await request(app)
             .post('/api/v1/client')
@@ -60,5 +76,7 @@ describe('createCustomer()', () => {
             .set('Accept', 'application/json');
 
         expect(res.body).not.toHaveProperty('password');
+        expect(res.body).toHaveProperty('_id');
+        expect(res.statusCode).toEqual(StatusCodes.CREATED);
     });
 });
