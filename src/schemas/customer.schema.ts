@@ -72,7 +72,6 @@ const CustomerSchema = new Schema<ICustomer>({
     },
     complement: {
         type: String,
-        required: true,
     },
     neighborhood: {
         type: String,
