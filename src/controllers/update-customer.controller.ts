@@ -45,10 +45,10 @@ export const updateCustomer = async (req: Request, res: Response) => {
         const { uf, localidade, bairro, logradouro } = viaCepResponse;
 
         existingCustomer.cep = cep;
-        existingCustomer.uf = uf || '';
-        existingCustomer.city = localidade || '';
-        existingCustomer.neighborhood = bairro || '';
-        existingCustomer.address = logradouro || '';
+        existingCustomer.uf = uf;
+        existingCustomer.city = localidade || 'Not informed';
+        existingCustomer.neighborhood = bairro || 'Not informed';
+        existingCustomer.address = logradouro || 'Not informed';
     }
 
     const validationError = existingCustomer.validateSync();
