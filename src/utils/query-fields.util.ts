@@ -61,6 +61,13 @@ export const validateQueries = (queries: string | string[]) => {
         )
     ) {
         throw new BadRequestError('Invalid query');
-    }
-    return queryList.join(' ');
+    } else if (
+        queryList.map((query): void => {
+            if (queryList.includes(`-${query}`)) {
+                throw new BadRequestError('Invalid query');
+            }
+            return;
+        })
+    )
+        return queryList.join(' ');
 };
