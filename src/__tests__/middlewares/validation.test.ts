@@ -1,6 +1,7 @@
 import request from 'supertest';
 import app from '../../app';
 import { createCustomer } from '../../controllers/post-customer.controller';
+import { StatusCodes } from 'http-status-codes';
 
 jest.mock('../../controllers/post-customer.controller');
 
@@ -8,7 +9,7 @@ describe('POST /client', () => {
     test('should validate the request body and create a new customer', async () => {
         (createCustomer as jest.Mock).mockImplementation(
             (req, res) => {
-                res.status(201).json(req.body);
+                res.status(StatusCodes.CREATED).json(req.body);
             },
         );
 
@@ -39,6 +40,6 @@ describe('POST /client', () => {
         });
 
         expect(res.body).toHaveProperty('error');
-        expect(res.statusCode).toEqual(400);
+        expect(res.statusCode).toEqual(StatusCodes.BAD_REQUEST);
     });
 });
