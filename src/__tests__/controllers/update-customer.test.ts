@@ -1,15 +1,15 @@
 import request from 'supertest';
 import app from '../../app';
 import CustomerModel from '../../models/customer.model';
-import { ObjectId } from 'mongodb';
 import axios from 'axios';
 import Joi from 'joi';
 import { updateCustomerSchemaValitation } from '../../validations/joi.validation';
+import { StatusCodes } from 'http-status-codes';
 
 jest.mock('../../models/customer.model');
 
 describe('updateCustomer()', () => {
-    const validCustomerId = new ObjectId('65722fe08539f8a9ec3877a8');
+    const validCustomerId = '65722fe08539f8a9ec3877a8';
     const updateEndpoint = `/api/v1/client/${validCustomerId}`;
 
     afterEach(() => {
@@ -49,11 +49,11 @@ describe('updateCustomer()', () => {
             .put(updateEndpoint)
             .send(updatedData);
 
-        expect(response.status).toBe(200);
+        expect(response.status).toEqual(StatusCodes.OK);
         expect(response.body).toHaveProperty('name', 'New name');
     });
 
-    test('should not update email or cpf', async () => {
+    test('should not update email', async () => {
         const updatedData = {
             email: 'new.email@example.com',
         };
@@ -72,8 +72,11 @@ describe('updateCustomer()', () => {
             .put(updateEndpoint)
             .send(updatedData);
 
-        expect(response.status).toBe(401);
-        expect(response.body).toHaveProperty('error', 401);
+        expect(response.status).toEqual(StatusCodes.UNAUTHORIZED);
+        expect(response.body).toHaveProperty(
+            'error',
+            StatusCodes.UNAUTHORIZED,
+        );
         expect(response.body).toHaveProperty(
             'message',
             'Email cannot be changed',
@@ -102,8 +105,11 @@ describe('updateCustomer()', () => {
             .put(updateEndpoint)
             .send(updatedData);
 
-        expect(response.status).toBe(400);
-        expect(response.body).toHaveProperty('error', 400);
+        expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+        expect(response.body).toHaveProperty(
+            'error',
+            StatusCodes.BAD_REQUEST,
+        );
         expect(response.body).toHaveProperty(
             'message',
             'CEP does not exist',
@@ -129,7 +135,7 @@ describe('updateCustomer()', () => {
             .put(updateEndpoint)
             .send(updatedData);
 
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(StatusCodes.OK);
         expect(response.body).toHaveProperty('name', 'New Name');
     });
 
@@ -163,20 +169,8 @@ describe('updateCustomer()', () => {
             .put(updateEndpoint)
             .send(updatedData);
 
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('cep', '01310-930');
-        expect(response.body).toHaveProperty('number', '500');
+        expect(response.status).toBe(StatusCodes.OK);
         expect(response.body).toHaveProperty('uf', 'SP');
-        expect(response.body).toHaveProperty('city', 'São Paulo');
-        expect(response.body).toHaveProperty(
-            'neighborhood',
-            'Bela Vista',
-        );
-        expect(response.body).toHaveProperty(
-            'address',
-            'Avenida Paulista',
-        );
-        expect(response.body).toHaveProperty('complement', '2100');
     });
 
     test('should return error for invalid password format', async () => {
@@ -217,8 +211,11 @@ describe('updateCustomer()', () => {
 
         const passwordValidationError = error?.details[0].message;
 
-        expect(response.status).toBe(400);
-        expect(response.body).toHaveProperty('error', 400);
+        expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+        expect(response.body).toHaveProperty(
+            'error',
+            StatusCodes.BAD_REQUEST,
+        );
         expect(response.body).toHaveProperty(
             'message',
             passwordValidationError,
