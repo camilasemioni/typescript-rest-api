@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../../app';
 import CustomerModel from '../../models/customer.model';
 import mongoose from 'mongoose';
+import { StatusCodes } from 'http-status-codes';
 
 jest.mock('../../models/customer.model', () => {
     return {
@@ -28,7 +29,7 @@ describe('getAllCustomers()', () => {
 
         const result = await request(app).get('/api/v1/client');
 
-        expect(result.statusCode).toEqual(200);
+        expect(result.statusCode).toEqual(StatusCodes.OK);
         expect(result.body).toEqual({});
     });
 
@@ -45,7 +46,7 @@ describe('getAllCustomers()', () => {
 
         const result = await request(app).get('/api/v1/client');
 
-        expect(result.statusCode).toEqual(200);
+        expect(result.statusCode).toEqual(StatusCodes.OK);
         expect(result.body).toEqual({
             numberOfClients: clients.length,
             clients,
@@ -57,7 +58,7 @@ describe('getAllCustomers()', () => {
             '/api/v1/client?fields=cbf',
         );
 
-        expect(result.statusCode).toEqual(400);
+        expect(result.statusCode).toEqual(StatusCodes.BAD_REQUEST);
         expect(result.body.message).toEqual('Invalid query');
     });
 
@@ -66,7 +67,7 @@ describe('getAllCustomers()', () => {
             '/api/v1/client?invalid=yes',
         );
 
-        expect(result.statusCode).toEqual(400);
+        expect(result.statusCode).toEqual(StatusCodes.BAD_REQUEST);
         expect(result.body.message).toEqual('Invalid query');
     });
 });
@@ -74,7 +75,7 @@ describe('getAllCustomers()', () => {
 describe('getSingleCustomer', () => {
     function validateId(result: request.Response, userId: string) {
         if (!mongoose.Types.ObjectId.isValid(userId)) {
-            result.statusCode = 400;
+            result.statusCode = StatusCodes.BAD_REQUEST;
         }
     }
 
@@ -104,7 +105,7 @@ describe('getSingleCustomer', () => {
 
         validateId(result, validUserId);
 
-        expect(result.statusCode).toEqual(404);
+        expect(result.statusCode).toEqual(StatusCodes.NOT_FOUND);
     });
 
     test('should return a status code of 400 if user is invalid', async () => {
@@ -116,7 +117,7 @@ describe('getSingleCustomer', () => {
 
         validateId(result, invalidUserId);
 
-        expect(result.statusCode).toEqual(400);
+        expect(result.statusCode).toEqual(StatusCodes.BAD_REQUEST);
     });
 
     test('should return a message if user is invalid', async () => {
