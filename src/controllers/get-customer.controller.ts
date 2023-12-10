@@ -52,7 +52,7 @@ export const getAllCustomers = async (_: Request, res: Response) => {
 
     if (fields) {
         result = result.select(
-            validateQueries(fields as string | string[]),
+            validateQueries(fields as string | string[])!,
         );
     }
 
