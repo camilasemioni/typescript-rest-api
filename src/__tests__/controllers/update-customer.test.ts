@@ -18,9 +18,9 @@ describe('updateCustomer()', () => {
 
     test('should respond with 200 OK for a valid update', async () => {
         const updatedData = {
-            name: 'Novo nome',
+            name: 'New name',
             birthday: '23/04/1997',
-            password: 'NovaSenha123',
+            password: 'NewPassword123',
             cep: '87030-110',
             number: '13',
         };
@@ -50,7 +50,7 @@ describe('updateCustomer()', () => {
             .send(updatedData);
 
         expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('name', 'Novo nome');
+        expect(response.body).toHaveProperty('name', 'New name');
     });
 
     test('should not update email or cpf', async () => {
@@ -224,5 +224,4 @@ describe('updateCustomer()', () => {
             passwordValidationError,
         );
     });
-
 });
