@@ -1,6 +1,7 @@
 import BadRequestError from '../errors/bad-request.error';
 
 export const fieldNames = [
+    '',
     'name',
     'cpf',
     'birthday',
