@@ -12,7 +12,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
     const customerId = req.params.id;
     const payload = req.body;
 
-    const { name, cpf, email, cep, password } = payload;
+    const { name, cpf, email, cep, password, birthday } = payload;
 
     if (cpf || email) {
         throw new UnauthorizedError(
@@ -52,6 +52,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
 
     existingCustomer.number =
         payload.number || existingCustomer.number;
+    existingCustomer.birthday = birthday || existingCustomer.birthday;
 
     if (password) {
         const hashedPassword = await bcrypt.hash(password, 10);
