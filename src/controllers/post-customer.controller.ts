@@ -1,4 +1,4 @@
-import { removePassword } from '../utils/customer.util';
+import { removePassword } from '../utils/remove-password.util';
 import CustomerModel from '../models/customer.model';
 import axios from 'axios';
 import BadRequestError from '../errors/bad-request.error';

@@ -6,7 +6,7 @@ import BadRequestError from '../errors/bad-request.error';
 import bcrypt from 'bcrypt';
 import axios from 'axios';
 import UnauthorizedError from '../errors/unauthorized.error';
-import { removePassword } from '../utils/customer.util';
+import { removePassword } from '../utils/remove-password.util';
 
 export const updateCustomer = async (req: Request, res: Response) => {
     const customerId = req.params.id;
