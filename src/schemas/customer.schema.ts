@@ -6,7 +6,6 @@ const CustomerSchema = new Schema<ICustomer>(
         name: {
             type: String,
             required: true,
-            unique: true,
             validate: {
                 validator: (value: string) =>
                     /^[A-Za-zÀ-ÖØ-öø-ÿ '-]{3,50}$/.test(value),
