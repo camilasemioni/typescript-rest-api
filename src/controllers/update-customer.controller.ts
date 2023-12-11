@@ -54,8 +54,6 @@ export const updateCustomer = async (req: Request, res: Response) => {
         payload.number || existingCustomer.number;
     existingCustomer.birthday = birthday || existingCustomer.birthday;
 
-    existingCustomer.birthday = birthday || existingCustomer.birthday;
-
     if (password) {
         const hashedPassword = await bcrypt.hash(password, 10);
         existingCustomer.password = hashedPassword;
