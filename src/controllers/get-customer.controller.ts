@@ -11,7 +11,10 @@ import {
 import BadRequestError from '../errors/bad-request.error';
 import NotFoundError from '../errors/not-found.error';
 
-export const getAllCustomers = async (req: Request, res: Response) => {
+export const getAllCustomers = async (
+    req: Request,
+    res: Response,
+) => {
     const count = await CustomerModel.countDocuments();
     if (count === 0) {
         return res.status(StatusCodes.OK).json({});
