@@ -11,13 +11,13 @@ import {
 import BadRequestError from '../errors/bad-request.error';
 import NotFoundError from '../errors/not-found.error';
 
-export const getAllCustomers = async (_: Request, res: Response) => {
+export const getAllCustomers = async (req: Request, res: Response) => {
     const count = await CustomerModel.countDocuments();
     if (count === 0) {
         return res.status(StatusCodes.OK).json({});
     }
 
-    const queryKeys: string[] = Object.keys(_.query);
+    const queryKeys: string[] = Object.keys(req.query);
     if (
         !queryKeys.every((key: string) =>
             allowedQueries.includes(key),
@@ -29,9 +29,9 @@ export const getAllCustomers = async (_: Request, res: Response) => {
     const queryObject: IQueries = {};
 
     fieldNames.map((field) => {
-        if (_.query[field]) {
+        if (req.query[field]) {
             queryObject[field] = {
-                $regex: _.query[field] as string,
+                $regex: req.query[field] as string,
             };
             if (caseInsensitiveFieldNames.includes(field)) {
                 queryObject[field].$options = 'i';
@@ -40,7 +40,7 @@ export const getAllCustomers = async (_: Request, res: Response) => {
     });
     let result = CustomerModel.find(queryObject);
 
-    const { sort, fields } = _.query;
+    const { sort, fields } = req.query;
 
     if (sort) {
         result = result.sort(
@@ -55,32 +55,47 @@ export const getAllCustomers = async (_: Request, res: Response) => {
             validateQueries(fields as string | string[])!,
         );
     }
+    if (req.query.page && req.query.limit) {
+        const page = +req.query.page || 1;
+        const limit = +req.query.limit || 5;
+        const skip = (page - 1) * limit;
 
-    const page = +_.query.page! || 1;
-    const limit = +_.query.limit! || 5;
-    const skip = (page - 1) * limit;
-
-    result = result.skip(skip).limit(limit);
+        result = result.skip(skip).limit(limit);
+    }
 
     const clients = await result;
 
+    const transformedClients = clients.map((client) => {
+        const transformedClient = client.toObject();
+        return {
+            id: transformedClient._id,
+            ...transformedClient,
+        };
+    });
+
     res.status(StatusCodes.OK).json({
         numberOfClients: clients.length,
-        clients,
+        clients: transformedClients,
     });
 };
 
 export const getSingleCustomer = async (
-    _: Request,
+    req: Request,
     res: Response,
 ) => {
-    const customer = await CustomerModel.findById(_.params.id);
+    const customer = await CustomerModel.findById(req.params.id);
 
     if (!customer) {
         throw new NotFoundError(
-            `No customer with id '${_.params.id}'`,
+            `No customer with id '${req.params.id}'`,
         );
     }
 
-    res.status(StatusCodes.OK).json(customer);
+    const transformedClient = customer.toObject();
+    const responseCustomer = {
+        id: transformedClient._id,
+        ...transformedClient,
+    };
+
+    res.status(StatusCodes.OK).json(responseCustomer);
 };

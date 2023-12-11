@@ -83,4 +83,11 @@ const CustomerSchema = new Schema<ICustomer>(
     { versionKey: false },
 );
 
+CustomerSchema.set('toObject', {
+    transform: function (_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+    },
+});
+
 export default CustomerSchema;

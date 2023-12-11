@@ -38,9 +38,8 @@ export const createCustomer = async (req: Request, res: Response) => {
     payload.password = hashedPassword;
 
     const customer = { ...payload, ...address };
-
     const newCustomer = await CustomerModel.create(customer);
-
     const noPasswordCustomer = removePassword(newCustomer);
+
     res.status(StatusCodes.CREATED).json(noPasswordCustomer);
 };
