@@ -2,7 +2,7 @@
     "openapi": "3.0.2",
     "info": {
         "title": "Challenge 02",
-        "description": "REST API for management of customers",
+        "description": "description",
         "version": "1.0"
     },
     "servers": [
@@ -14,22 +14,20 @@
                 },
                 "version": {
                     "default": "v1",
-                    "enum": ["v1"]
+                    "enum": [
+                        "v1"
+                    ]
                 }
             }
         }
     ],
-    "tags": [
-        {
-            "name": "Client",
-            "description": "Client management"
-        }
-    ],
     "paths": {
-        "/client": {
+        "/test": {
             "get": {
                 "summary": "Gets all clients",
-                "tags": ["Client"],
+                "tags": [
+                    "Client"
+                ],
                 "parameters": [
                     {
                         "name": "page",
@@ -120,7 +118,9 @@
             },
             "post": {
                 "summary": "Creates a client",
-                "tags": ["Client"],
+                "tags": [
+                    "Client"
+                ],
                 "requestBody": {
                     "description": "Client data to be created",
                     "required": false,
@@ -151,7 +151,9 @@
         "/client/{clientId}": {
             "get": {
                 "summary": "Gets the specified client",
-                "tags": ["Client"],
+                "tags": [
+                    "Client"
+                ],
                 "parameters": [
                     {
                         "name": "clientId",
@@ -183,7 +185,9 @@
             },
             "put": {
                 "summary": "Updates a client",
-                "tags": ["Client"],
+                "tags": [
+                    "Client"
+                ],
                 "parameters": [
                     {
                         "name": "clientId",
@@ -226,7 +230,9 @@
             },
             "delete": {
                 "summary": "Deletes a client",
-                "tags": ["Client"],
+                "tags": [
+                    "Client"
+                ],
                 "parameters": [
                     {
                         "name": "clientId",
