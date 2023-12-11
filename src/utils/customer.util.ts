@@ -2,7 +2,7 @@ import ICustomer from '../interfaces/customer.interface';
 
 export function removePassword(Customer: ICustomer) {
     return {
-        id: Customer._id,
+        id: Customer.id,
         name: Customer.name,
         cpf: Customer.cpf,
         birthday: Customer.birthday,
