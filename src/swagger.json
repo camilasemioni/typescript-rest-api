@@ -1,0 +1,313 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Challenge 02",
+        "description": "REST API for management of customers",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:{port}/api/{version}",
+            "variables": {
+                "port": {
+                    "default": "3000"
+                },
+                "version": {
+                    "default": "v1",
+                    "enum": ["v1"]
+                }
+            }
+        }
+    ],
+    "tags": [
+        {
+            "name": "Client",
+            "description": "Client management"
+        }
+    ],
+    "paths": {
+        "/client": {
+            "get": {
+                "summary": "Gets all clients",
+                "tags": ["Client"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "schema": {
+                            "type": "integer",
+                            "default": 5
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "description": "Filter by (hold ctrl to select multiple fields)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "name",
+                                    "cpf",
+                                    "birthday",
+                                    "email",
+                                    "cep",
+                                    "number",
+                                    "uf",
+                                    "city",
+                                    "address",
+                                    "complement",
+                                    "neighborhood"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort by",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "name",
+                                "cpf",
+                                "birthday",
+                                "email",
+                                "cep",
+                                "number",
+                                "uf",
+                                "city",
+                                "address",
+                                "complement",
+                                "neighborhood",
+                                "-name",
+                                "-cpf",
+                                "-birthday",
+                                "-email",
+                                "-cep",
+                                "-number",
+                                "-uf",
+                                "-city",
+                                "-address",
+                                "-complement",
+                                "-neighborhood"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Creates a client",
+                "tags": ["Client"],
+                "requestBody": {
+                    "description": "Client data to be created",
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Client"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created Client Successfully",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Input"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/client/{clientId}": {
+            "get": {
+                "summary": "Gets the specified client",
+                "tags": ["Client"],
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Client object id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Client Id invalid"
+                    },
+                    "404": {
+                        "description": "Client Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Updates a client",
+                "tags": ["Client"],
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Client object id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Client data to be updated",
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateClient"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated Client Successfully",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Input"
+                    },
+                    "404": {
+                        "description": "Client Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletes a client",
+                "tags": ["Client"],
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Client object id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted Client Successfully",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Input"
+                    },
+                    "404": {
+                        "description": "Tutor Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Client": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Jhonny Rowen"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "522.270.870-56"
+                    },
+                    "birthday": {
+                        "type": "string",
+                        "example": "25/12/1975"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "jhonny.rowen@email.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "Password123"
+                    },
+                    "cep": {
+                        "type": "string",
+                        "example": "01001-000"
+                    },
+                    "number": {
+                        "type": "string",
+                        "example": "42"
+                    }
+                }
+            },
+            "UpdateClient": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Jorge Ramos"
+                    },
+                    "cep": {
+                        "type": "string",
+                        "example": "22261-090"
+                    }
+                }
+            }
+        }
+    }
+}
