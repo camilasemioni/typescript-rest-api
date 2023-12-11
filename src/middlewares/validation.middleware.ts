@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { Schema, ValidationResult } from 'joi';
 import errorHandler from '../utils/error-handler.util';
-import formatCep from '../utils/format-cep';
-import formatCpf from '../utils/format-cpf';
+import formatCep from '../utils/format-cep.util';
+import formatCpf from '../utils/format-cpf.util';
 
 export function validateMiddleware(schema: Schema) {
     return (req: Request, res: Response, next: NextFunction) => {
