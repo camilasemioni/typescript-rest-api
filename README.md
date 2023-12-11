@@ -79,29 +79,6 @@ After all the configuration is set up
 #### Code Editor
 >VSCode
 
-#### Dependencies
-```
-"@types/body-parser": "^1.19.5",
-"@types/express": "^4.17.21",
-"@types/node": "^20.9.0",
-"@typescript-eslint/eslint-plugin": "^6.10.0",
-"@typescript-eslint/parser": "^6.10.0",
-"@joi/date": "^2.1.0",
-"@types/swagger-ui-express": "^4.1.6",
-"eslint": "^8.53.0",
-"swagger-ui-express": "^5.0.0",
-"eslint-config-prettier": "^9.0.0",
-"prettier": "^3.0.3",
-"tsc-watch": "^6.0.4"
-"body-parser": "^1.20.2",
-"dotenv": "^16.3.1",
-"express": "^4.18.2",
-"express-async-errors": "^3.1.1",
-"joi": "^17.11.0",
-"mongoose": "^8.0.0",
-"typescript": "^5.2.2"
-```
-
 ## Acknowledgments
 
 ### Developers: 
