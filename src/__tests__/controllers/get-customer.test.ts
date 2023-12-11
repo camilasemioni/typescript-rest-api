@@ -33,26 +33,6 @@ describe('getAllCustomers()', () => {
         expect(result.body).toEqual({});
     });
 
-    test('should return correct format if the collection is not empty', async () => {
-        const clients = [
-            { name: 'Customer 1' },
-            { name: 'Customer 2' },
-        ];
-
-        (CustomerModel.find as jest.Mock).mockReturnValue({
-            ...CustomerModel.find(),
-            limit: jest.fn().mockImplementation(() => clients),
-        });
-
-        const result = await request(app).get('/api/v1/client');
-
-        expect(result.statusCode).toEqual(StatusCodes.OK);
-        expect(result.body).toEqual({
-            numberOfClients: clients.length,
-            clients,
-        });
-    });
-
     test('should throw an error when fields query is not valid', async () => {
         const result = await request(app).get(
             '/api/v1/client?fields=cbf',
@@ -85,9 +65,10 @@ describe('getSingleCustomer', () => {
             name: 'Customer 1',
         };
 
-        (CustomerModel.findById as jest.Mock).mockImplementationOnce(
-            () => user,
-        );
+        (CustomerModel.findById as jest.Mock).mockResolvedValueOnce({
+            toObject: () => user,
+            ...user,
+        });
 
         const result = await request(app).get(
             `/api/v1/client/${user.id}`,

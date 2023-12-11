@@ -9,7 +9,7 @@ jest.mock('../../models/customer.model', () => {
     return {
         create: jest.fn((customer) => {
             return {
-                _id: '6570ba4e2c13eb5171d4fa3e',
+                id: '6570ba4e2c13eb5171d4fa3e',
                 ...customer,
             };
         }),
@@ -72,11 +72,10 @@ describe('createCustomer()', () => {
 
         const res = await request(app)
             .post('/api/v1/client')
-            .send(mockData)
-            .set('Accept', 'application/json');
+            .send(mockData);
 
         expect(res.body).not.toHaveProperty('password');
-        expect(res.body).toHaveProperty('_id');
+        expect(res.body).toHaveProperty('id');
         expect(res.statusCode).toEqual(StatusCodes.CREATED);
     });
 });
